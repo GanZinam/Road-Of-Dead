@@ -25,8 +25,8 @@ namespace GM
         public bool Die = false;
         [HideInInspector]
         public bool plzShaking = false;     // 흔들어야 될때
-        [HideInInspector]
         public UILabel touch_screen;        // 몬스터가 붙었을때 화면을 터치하시오 txt      
+        
 
         //@ 게임 UI
         public UISlider hpBar;              // hp 스크롤 바

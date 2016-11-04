@@ -11,12 +11,12 @@ public class Monster : MonoBehaviour
     float nowtime;
     float DelayTime;
 
-    
+
     void Start()
     {
         need_ = false;
         DelayTime = 0.5f;
-        
+
         StartCoroutine(update());
     }
 
@@ -37,20 +37,20 @@ public class Monster : MonoBehaviour
 
             if (200 <= gameObject.transform.localPosition.x)        //200 = 자동차 끝부분  need 가까이있으면 true되어 공격으로 ㄱ
             {
-                GM.GameManager.getInstance().touch_screen.gameObject.SetActive(true);   //몬스터가 붙었을때 화면을 터치하시오 txt 생성                suck
+                GM.GameManager.getInstance().touch_screen.gameObject.SetActive(true);   //몬스터가 붙었을때 화면을 터치하시오 txt 생성
                 GM.GameManager.getInstance().plzShaking = true;
                 need_ = true;
                 GM.GameManager.getInstance().nStickMonster += 1;
             }
         }
         else                                //공격하는부분
-        {   
+        {
             yield return new WaitForSeconds(0.5f);      //0.5초당 한번씩 공격
             attack();
         }
         StartCoroutine(update());
     }
-    
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Bullet"))
