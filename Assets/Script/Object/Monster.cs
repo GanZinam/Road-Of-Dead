@@ -69,6 +69,7 @@ public class Monster : MonoBehaviour
         if (need_ && GM.GameManager.getInstance().Die)
         {
             // 현재 자동차에 붙어서 공격중이며 죽어야 할 대상일시 오브젝트를 지워 준다.
+            GM.GameManager.getInstance().touch_screen.gameObject.SetActive(false);   //몬스터가 붙었을때 화면을 터치하시오 txt 삭제
             Destroy(gameObject);
             removeAtVector();
         }
