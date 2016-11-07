@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{F7AEC719-BE8D-61B5-6553-6A71392828B3}</ProjectGuid>
+    <ProjectGuid>{F72D66EF-217B-706A-F39A-87C21FCDB6BB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -152,16 +152,17 @@
      <Compile Include="Assets\NGUI\Scripts\UI\UITexture.cs" />
      <Compile Include="Assets\NGUI\Scripts\UI\UITooltip.cs" />
      <Compile Include="Assets\NGUI\Scripts\UI\UIViewport.cs" />
-     <Compile Include="Assets\Script\MainManager.cs" />
-     <Compile Include="Assets\Script\Manager\Background.cs" />
-     <Compile Include="Assets\Script\Manager\PlayManager.cs" />
-     <Compile Include="Assets\Script\Manager\StartManager.cs" />
+     <Compile Include="Assets\Script\Info\ItemInfo.cs" />
+     <Compile Include="Assets\Script\Info\PlayerInfo.cs" />
+     <Compile Include="Assets\Script\Manager\GameManager.cs" />
+     <Compile Include="Assets\Script\Manager\InGameManager.cs" />
+     <Compile Include="Assets\Script\Manager\MainManager.cs" />
+     <Compile Include="Assets\Script\Manager\ReadyManager.cs" />
+     <Compile Include="Assets\Script\Object\Background.cs" />
      <Compile Include="Assets\Script\Object\Bullet.cs" />
      <Compile Include="Assets\Script\Object\Monster.cs" />
      <Compile Include="Assets\Script\Object\Monster1.cs" />
      <Compile Include="Assets\Script\Object\Monster2.cs" />
-     <Compile Include="Assets\Script\PlayerInfo.cs" />
-     <None Include="Assets\NGUI\ReadMe - 3.9.8.txt" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Masked 1.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Text 2.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Masked 2.shader" />
