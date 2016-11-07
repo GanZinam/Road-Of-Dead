@@ -15,6 +15,26 @@ namespace GM
         public Text chatTxt;            // 채팅 내용
 
         public Sprite[] zombieTypes;    // 좀비 타입들
+        public GameObject[] rocker;
+
+        void Start()
+        {
+            PlayerPrefs.SetInt("Map_0", 1);
+            PlayerPrefs.SetInt("Map_1", 0);
+            PlayerPrefs.SetInt("Map_2", 0);
+            PlayerPrefs.SetInt("Map_3", 0);
+            PlayerPrefs.SetInt("Map_4", 0);
+
+            for (int i = 0; i < 5; i++)
+            {
+                if (PlayerPrefs.GetInt(string.Format("Map_{0}", i)).Equals(1))
+                {
+                    rocker[i].SetActive(false);
+                }
+            }
+
+            PlayerInfo.quest = 1;
+        }
 
         /**
          * @brief : 맵 
@@ -23,7 +43,10 @@ namespace GM
         public void mapBT(int i)
         {
             mapTxt.text = "";
-            questTxt.text = "";
+            if (PlayerInfo.quest.Equals(1))
+            {
+                questTxt.text = "좀비 100마리 처치!";
+            }
             chatTxt.text = "";
 
             images[0].sprite = zombieTypes[0];

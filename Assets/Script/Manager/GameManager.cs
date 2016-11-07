@@ -187,6 +187,15 @@ namespace GM
         {
             monsterKill++;  // 돈이 증가 된다 라는 것은 몬스터가 한마리 죽었다는 것
 
+            if (PlayerInfo.quest.Equals(1))
+            {
+                // 몬스터 100마리 처치 미션
+                if (monsterKill.Equals(100))
+                {
+
+                }
+            }
+
             PlayerPrefs.SetInt("Money", PlayerPrefs.GetInt("Money") + m);
             nowMyMoneyTxt.text = PlayerPrefs.GetInt("Money") + "";
         }
