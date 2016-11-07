@@ -7,6 +7,7 @@ public class Monster : MonoBehaviour
     public float speed = 0.5f;      // 몬스터 이동 속도
 
     bool need_;
+    bool item_check;
 
     float nowtime;
     float DelayTime;
@@ -15,6 +16,7 @@ public class Monster : MonoBehaviour
     void Start()
     {
         need_ = false;
+        item_check = false;
         DelayTime = 0.5f;
 
         StartCoroutine(update());
@@ -59,6 +61,17 @@ public class Monster : MonoBehaviour
             other.gameObject.transform.localPosition = new Vector3(-1500, -2000);
             hp -= 1;
         }
+        if (other.gameObject.CompareTag("Item"))
+        {
+            item_check = true;
+        }
+    }
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Item"))
+        {
+            item_check = false;
+        }
     }
 
     /**
@@ -66,12 +79,23 @@ public class Monster : MonoBehaviour
      */
     public void attack_move()
     {
-        if (need_ && GM.GameManager.getInstance().Die)
+        if (need_)
         {
             // 현재 자동차에 붙어서 공격중이며 죽어야 할 대상일시 오브젝트를 지워 준다.
             GM.GameManager.getInstance().touch_screen.gameObject.SetActive(false);   //몬스터가 붙었을때 화면을 터치하시오 txt 삭제
             Destroy(gameObject);
             removeAtVector();
+        }
+    }
+
+    /**
+     * @brief : 폭탄으로 몬스터 죽이기
+     */
+    public void boom_item_die()
+    {
+        if (item_check)
+        {
+            hp -= 5;
         }
     }
 

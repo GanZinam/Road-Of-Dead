@@ -22,8 +22,6 @@ namespace GM
         [HideInInspector]
         public bool isGameEnd = false;      // 게임 결과창이 난 후
         [HideInInspector]
-        public bool Die = false;
-        [HideInInspector]
         public bool plzShaking = false;     // 흔들어야 될때
         public UILabel touch_screen;        // 몬스터가 붙었을때 화면을 터치하시오 txt      
         
@@ -86,7 +84,6 @@ namespace GM
             waveNum = 0;
             pause = true;
             isGameEnd = false;
-            Die = false;
             plzShaking = false;
 
             needShakeCount = 0;
@@ -125,8 +122,6 @@ namespace GM
             //!< 붙어있는 몬스터 수 * 4 만큼 클릭해야됨
             if ((nStickMonster * 4) <= needShakeCount)
             {
-                Die = true;
-
                 //@ 붙어있는 몬스터들 제거
                 int monC = v_monster1.Count;
                 for (int i = 0; i < v_monster1.Count; i++)
@@ -153,6 +148,33 @@ namespace GM
                 needShakeCount = 0;
                 nStickMonster = 0;
                 Reload = false;
+            }
+        }
+        /**
+        * @brief : 폭탄 아이템 안에 들어와있는 몬스터 죽이기
+        */
+        public void cheak_Monster()
+        {
+            int monC = v_monster1.Count;
+            for (int i = 0; i < v_monster1.Count; i++)
+            {
+                v_monster1[i].SendMessage("boom_item_die");
+                if (!monC.Equals(v_monster1.Count))
+                {
+                    monC = v_monster1.Count;
+                    i--;
+                }
+            }
+
+            monC = v_monster2.Count;
+            for (int i = 0; i < v_monster2.Count; i++)
+            {
+                v_monster2[i].SendMessage("boom_item_die");
+                if (!monC.Equals(v_monster2.Count))
+                {
+                    monC = v_monster2.Count;
+                    i--;
+                }
             }
         }
 

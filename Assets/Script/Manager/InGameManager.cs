@@ -33,6 +33,9 @@ namespace GM
         [HideInInspector]
         public int item_num2;               // 아이템 2번에 선택된 아이템 번호                                                                         
         public GameObject item_use_dark;    // 아이템 사용시 어두워짐
+        
+        [SerializeField]
+        GameObject mousePositem;            // 터치한 아이템 위치 표시해주는 오브젝트
 
         //@ 포지션
         Vector2 touchPos;                   // 내가 터치한 위치
@@ -69,7 +72,7 @@ namespace GM
         GameObject[] bulletsObjs;           // 총알 오브젝트 풀
 
         [SerializeField]
-        GameObject mousePosObj;             // 터치한 위치 표시해주는 오브젝트
+        GameObject mousePosObj;             // 터치한 총알 위치 표시해주는 오브젝트
 
 
         void Start()
@@ -94,7 +97,7 @@ namespace GM
         public void init()
         {
             GameManager.getInstance().init();
-            DelayTime = 0.0f;       //총알 연사속도
+            DelayTime = 0.3f;       //총알 연사속도
         }
 
 
@@ -141,17 +144,17 @@ namespace GM
                 }
                 else if (Input.GetMouseButton(0))
                 {
+                    touchPos = new Vector2(1280.0f / Screen.width * Input.mousePosition.x, 720.0f / Screen.height * Input.mousePosition.y);
                     if (720.0f / Screen.height * Input.mousePosition.y <= 292)
                     {
                         if (push_item[0] || push_item[1] || push_item[2] || push_item[3])
                         {
-                            item_use_dark.SetActive(false);
-                            for (int i = 0; i < 4; i++)
-                            {
-                                if (!push_item[i])
-                                    item_exit(i);
-                            }
+                            Debug.Log(1);
                             item_finish = true;
+
+                            mousePositem.SetActive(true);
+                            mousePositem.transform.localPosition = touchPos - new Vector2(640, 360);
+
                         }
                         else if (item_finish.Equals(false))
 
@@ -160,7 +163,6 @@ namespace GM
                             if (DelayTime <= nowtime)
                             {
                                 nowtime -= DelayTime;
-                                touchPos = new Vector2(1280.0f / Screen.width * Input.mousePosition.x, 720.0f / Screen.height * Input.mousePosition.y);
                                 mousePosObj.SetActive(true);
                                 mousePosObj.transform.localPosition = touchPos - new Vector2(640, 360);
 
@@ -172,6 +174,7 @@ namespace GM
                     else
                     {
                         mousePosObj.SetActive(false);
+                        mousePositem.SetActive(false);
                     }
                 }
                 else if (Input.GetMouseButtonUp(0))
@@ -179,7 +182,15 @@ namespace GM
                     mousePosObj.SetActive(false);
                     if (item_finish)
                     {
+                        GameManager.getInstance().cheak_Monster();
                         item_finish = false;
+                        item_use_dark.SetActive(false);
+                        mousePositem.SetActive(false);
+                        for (int i = 0; i < 4; i++)
+                        {
+                            if (push_item[i])
+                                item_exit(i);
+                        }
                     }
                 }
                 #endregion
@@ -505,6 +516,8 @@ namespace GM
                 item_exit(6);
             }
         }
+
+       
         #endregion
     }
 }
