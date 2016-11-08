@@ -32,7 +32,7 @@ public class Monster : MonoBehaviour
         {
             move();     //움직이는 함수
 
-            if (200 <= gameObject.transform.localPosition.x)        //200 = 자동차 끝부분  need 가까이있으면 true되어 공격으로 ㄱ
+            if (318 <= gameObject.transform.localPosition.x)        //318 = 자동차 끝부분  need 가까이있으면 true되어 공격으로 ㄱ
             {
                 GM.GameManager.getInstance().touch_screen.gameObject.SetActive(true);   //몬스터가 붙었을때 화면을 터치하시오 txt 생성
                 GM.GameManager.getInstance().plzShaking = true;

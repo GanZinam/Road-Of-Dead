@@ -3,17 +3,17 @@ using System.Collections;
 
 public class Background : MonoBehaviour
 {
-    public float speed = 0;
+    public float BG_speed;
 
     void Update()
     {
         if (!GM.GameManager.getInstance().pause)
         {
-            transform.position -= new Vector3(speed * Time.deltaTime, 0);
+            transform.position -= new Vector3(BG_speed * Time.smoothDeltaTime, 0);
 
-            if (transform.localPosition.x <= -5470)
+            if (transform.localPosition.x <= -6513f)
             {
-                transform.localPosition = new Vector3(0, 0, 0);
+                transform.localPosition = new Vector3(-384.5f, 0, 0);
             }
         }
     }

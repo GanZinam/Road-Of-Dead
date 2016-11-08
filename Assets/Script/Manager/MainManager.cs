@@ -20,7 +20,7 @@ namespace GM
         void Start()
         {
             PlayerPrefs.SetInt("Map_0", 1);
-            PlayerPrefs.SetInt("Map_1", 0);
+            PlayerPrefs.SetInt("Map_1", 1);
             PlayerPrefs.SetInt("Map_2", 0);
             PlayerPrefs.SetInt("Map_3", 0);
             PlayerPrefs.SetInt("Map_4", 0);
@@ -73,6 +73,34 @@ namespace GM
             PlayerInfo.hp = 1000;
 
             Application.LoadLevel("InGameScene");
+        }
+
+        public void Nitro(int i)
+        {
+            for (int j = 0; j < 4; j++)
+                PlayerPrefs.SetInt(string.Format("Nitro_{0}", j), 0);
+            PlayerPrefs.SetInt(string.Format("Nitro_{0},i"), 1);
+        }
+
+        public void Engine(int i)
+        {
+            for (int j = 0; j < 4; j++)
+                PlayerPrefs.SetInt(string.Format("Engine_{0}", j), 0);
+            PlayerPrefs.SetInt(string.Format("Engine_{0},i"), 1);
+        }
+
+        public void Car(int i)
+        {
+            for (int j = 0; j < 4; j++)
+                PlayerPrefs.SetInt(string.Format("Car_{0}", j), 0);
+            PlayerPrefs.SetInt(string.Format("Car_{0},i"), 1);
+        }
+
+        public void Tire(int i)
+        {
+            for (int j = 0; j < 4; j++)
+                PlayerPrefs.SetInt(string.Format("Tire_{0}", j), 0);
+            PlayerPrefs.SetInt(string.Format("Tire_{0},i"), 1);
         }
     }
 }
