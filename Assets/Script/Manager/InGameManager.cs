@@ -57,6 +57,7 @@ namespace GM
         bool Reload_Check = false;          // 총알 갈고있을때 버튼 클릭 ㄴ
         float Reload_Time = 1.5f;           // 재장전 시간
         float Reload_NowTime;
+        float Bullet_num;                   // 발사된 총알수  
 
         //@ 총 애니메이션
         [SerializeField]
@@ -97,7 +98,7 @@ namespace GM
         public void init()
         {
             GameManager.getInstance().init();
-            DelayTime = 0.3f;       //총알 연사속도
+            DelayTime = 0.5f;       //총알 연사속도
         }
 
 
@@ -135,6 +136,10 @@ namespace GM
                 #endregion
 
                 #region _SHOOT_BULLET_
+    
+                nowtime += Time.smoothDeltaTime;
+                
+                
                 if (Input.GetMouseButtonDown(0))
                 {
                     if (GameManager.getInstance().plzShaking)
@@ -149,7 +154,6 @@ namespace GM
                     {
                         if (push_item[0] || push_item[1] || push_item[2] || push_item[3])
                         {
-                            Debug.Log(1);
                             item_finish = true;
 
                             mousePositem.SetActive(true);
@@ -159,10 +163,9 @@ namespace GM
                         else if (item_finish.Equals(false))
 
                         {
-                            nowtime += Time.smoothDeltaTime;
                             if (DelayTime <= nowtime)
                             {
-                                nowtime -= DelayTime;
+                                nowtime = 0f;
                                 mousePosObj.SetActive(true);
                                 mousePosObj.transform.localPosition = touchPos - new Vector2(640, 360);
 
@@ -236,6 +239,7 @@ namespace GM
                     GameManager.getInstance().Reload = false;
                     TimeStart = false;
                     Reload_Check = false;
+                    Bullet_num = 0f;
                 }
             }
         }
@@ -262,6 +266,7 @@ namespace GM
 
                 // 총알 수
                 GameManager.getInstance().countBullet--;
+                Bullet_num++;
                 if (GameManager.getInstance().countBullet.Equals(0))
                     reloadAnim.SetTrigger("plzReload");     // 재장전 요청 애니메이션
             }
