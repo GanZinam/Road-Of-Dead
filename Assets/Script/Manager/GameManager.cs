@@ -54,6 +54,7 @@ namespace GM
 
         [SerializeField]
         Sprite[] itemSpr;
+        public GameObject cam;              // 메인 카메라
 
         public ITEM[] myItem = new ITEM[2];
 

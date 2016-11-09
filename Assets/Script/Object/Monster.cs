@@ -6,6 +6,7 @@ public class Monster : MonoBehaviour
     public int hp = 10;             // 몬스터 hp
     public float speed = 0.5f;      // 몬스터 이동 속도
 
+
     bool need_;                     // 트럭에 붙어 있나 없나 체크
     bool item_check;                // 아이템 안에 들어와있나 아닌가 체크
 
@@ -40,10 +41,11 @@ public class Monster : MonoBehaviour
                 GM.GameManager.getInstance().nStickMonster += 1;
             }
         }
-        else                                //공격하는부분
+        else                                //몬스터가 공격하는부분
         {
             yield return new WaitForSeconds(0.5f);      //0.5초당 한번씩 공격  (몬스터 공격 딜레이 시간)
             attack();
+            Move_camera();
         }
         StartCoroutine(update());
     }
@@ -98,6 +100,14 @@ public class Monster : MonoBehaviour
         {
             hp -= 10;
         }
+    }
+    
+    /**
+     * @brief : 몬스터가 공격할때 카메라 흔들리는것
+     */
+    public void Move_camera()
+    {
+        iTween.ShakePosition(GM.GameManager.getInstance().cam, iTween.Hash("x", 0.2f, "time", 1.0f));
     }
 
     /**
