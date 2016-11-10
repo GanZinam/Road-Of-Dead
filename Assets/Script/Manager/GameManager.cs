@@ -23,7 +23,9 @@ namespace GM
         public bool isGameEnd = false;      // 게임 결과창이 난 후
         [HideInInspector]
         public bool plzShaking = false;     // 흔들어야 될때
-        public UILabel touch_screen;        // 몬스터가 붙었을때 화면을 터치하시오 txt      
+        public UILabel touch_screen;        // 몬스터가 붙었을때 화면을 터치하시오 txt  
+        [HideInInspector]
+        public int map_num;                 // 이번게임 맵 번호
         
 
         //@ 게임 UI
@@ -39,6 +41,22 @@ namespace GM
         public int monsterKill = 0;         // 죽인 몬스터 수
         [HideInInspector]
         public int nStickMonster = 0;       // 붙은 몬스터 수 (떼어내야될 수)
+        [HideInInspector]
+        int M1_count = 0;                   // 몬스터 1 수
+        [HideInInspector]
+        int M2_count = 0;                   // 몬스터 2 수
+        [HideInInspector]
+        int M3_count = 0;                   // 몬스터 3 수
+        [HideInInspector]
+        int M4_count = 0;                   // 몬스터 4 수
+        [HideInInspector]
+        public Vector3 monsterSpawnPos;     // 몬스터 생성 위치
+
+        //@ 몬스터 생성
+        [SerializeField]
+        GameObject[] mon;                   // 몬스터 prefab
+        [SerializeField]
+        GameObject monsterParent;           // 몬스터 부모
 
         //@ 총알
         [HideInInspector]
@@ -51,6 +69,10 @@ namespace GM
         public List<GameObject> v_monster1 = new List<GameObject>();
         [HideInInspector]
         public List<GameObject> v_monster2 = new List<GameObject>();
+        [HideInInspector]
+        public List<GameObject> v_monster3 = new List<GameObject>();
+        [HideInInspector]
+        public List<GameObject> v_monster4 = new List<GameObject>();
 
         [SerializeField]
         Sprite[] itemSpr;
@@ -81,6 +103,8 @@ namespace GM
 
             v_monster1.Clear();
             v_monster2.Clear();
+            v_monster3.Clear();
+            v_monster4.Clear();
 
             waveNum = 0;
             pause = true;
@@ -110,6 +134,8 @@ namespace GM
             itemCostTxt[1].text = 20 + "";
             itemCostTxt[2].text = 30 + "";
             itemCostTxt[3].text = 40 + "";
+
+
         }
 
 
@@ -145,6 +171,26 @@ namespace GM
                         i--;
                     }
                 }
+                monC = v_monster3.Count;
+                for (int i = 0; i < v_monster3.Count; i++)
+                {
+                    v_monster3[i].SendMessage("attack_move");
+                    if (!monC.Equals(v_monster3.Count))
+                    {
+                        monC = v_monster3.Count;
+                        i--;
+                    }
+                } 
+                monC = v_monster4.Count;
+                for (int i = 0; i < v_monster4.Count; i++)
+                {
+                    v_monster4[i].SendMessage("attack_move");
+                    if (!monC.Equals(v_monster4.Count))
+                    {
+                        monC = v_monster4.Count;
+                        i--;
+                    }
+                }
                 plzShaking = false;
                 needShakeCount = 0;
                 nStickMonster = 0;
@@ -174,6 +220,26 @@ namespace GM
                 if (!monC.Equals(v_monster2.Count))
                 {
                     monC = v_monster2.Count;
+                    i--;
+                }
+            }
+            monC = v_monster3.Count;
+            for (int i = 0; i < v_monster3.Count; i++)
+            {
+                v_monster3[i].SendMessage("boom_item_die");
+                if (!monC.Equals(v_monster3.Count))
+                {
+                    monC = v_monster3.Count;
+                    i--;
+                }
+            }
+            monC = v_monster4.Count;
+            for (int i = 0; i < v_monster4.Count; i++)
+            {
+                v_monster4[i].SendMessage("boom_item_die");
+                if (!monC.Equals(v_monster4.Count))
+                {
+                    monC = v_monster4.Count;
                     i--;
                 }
             }
@@ -252,5 +318,61 @@ namespace GM
             itemImg[System.Convert.ToInt32(idx)].sprite2D = null;
             itemTxt[System.Convert.ToInt32(idx)].text = "";
         }
+        #region _MONSTER_CREAT_
+
+        /**
+         * @brief : 1번몬스터 생성
+         */
+        public void Monster_1_creat()
+        {
+            M1_count++;
+
+            GameObject obj = NGUITools.AddChild(monsterParent, mon[0]) as GameObject;
+            obj.transform.localPosition = monsterSpawnPos;
+            obj.transform.localScale = new Vector3(0.3f, 0.3f);
+            GameManager.getInstance().v_monster1.Add(obj);
+        }
+
+        /**
+         * @brief : 2번몬스터 생성
+         */
+        public void Monster_2_creat()
+        {
+            M2_count++;
+
+            GameObject obj = NGUITools.AddChild(monsterParent, mon[1]) as GameObject;
+            obj.transform.localPosition = monsterSpawnPos;
+            obj.transform.localScale = new Vector3(0.3f, 0.3f);
+            GameManager.getInstance().v_monster2.Add(obj);
+        }
+
+        /**
+         * @brief : 3번몬스터 생성
+         */
+        public void Monster_3_creat()
+        {
+            M3_count++;
+
+            GameObject obj = NGUITools.AddChild(monsterParent, mon[2]) as GameObject;
+            obj.transform.localPosition = monsterSpawnPos;
+            obj.transform.localScale = new Vector3(0.3f, 0.3f);
+            GameManager.getInstance().v_monster3.Add(obj);
+        }
+
+        /**
+         * @brief : 4번몬스터 생성
+         */
+        public void Monster_4_creat()
+        {
+            M4_count++;
+
+            GameObject obj = NGUITools.AddChild(monsterParent, mon[3]) as GameObject;
+            obj.transform.localPosition = monsterSpawnPos;
+            obj.transform.localScale = new Vector3(0.3f, 0.3f);
+            GameManager.getInstance().v_monster4.Add(obj);
+        }
+
+
+        #endregion
     }
 }

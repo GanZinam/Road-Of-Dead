@@ -6,6 +6,7 @@ namespace GM
 {
     public class MainManager : MonoBehaviour
     {
+        int next_map_num;               // 선택된 맵 번호
         int whereMe = 0;                // 현재 내 위치
         public GameObject pop;          // info 팝업
 
@@ -42,6 +43,8 @@ namespace GM
          */
         public void mapBT(int i)
         {
+            next_map_num = i;
+            Debug.Log("next_map_num : "+ next_map_num);
             mapTxt.text = "";
             if (PlayerInfo.quest.Equals(1))
             {
@@ -71,6 +74,7 @@ namespace GM
         public void gameStartBT()
         {
             PlayerInfo.hp = 1000;
+            GameManager.getInstance().map_num = next_map_num;       //멥 정보 넘겨주기
 
             Application.LoadLevel("InGameScene");
         }

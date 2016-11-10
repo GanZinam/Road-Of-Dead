@@ -158,11 +158,14 @@
      <Compile Include="Assets\Script\Manager\InGameManager.cs" />
      <Compile Include="Assets\Script\Manager\MainManager.cs" />
      <Compile Include="Assets\Script\Manager\ReadyManager.cs" />
+     <Compile Include="Assets\Script\Map\Map1.cs" />
      <Compile Include="Assets\Script\Object\Background.cs" />
      <Compile Include="Assets\Script\Object\Bullet.cs" />
      <Compile Include="Assets\Script\Object\Monster.cs" />
      <Compile Include="Assets\Script\Object\Monster1.cs" />
      <Compile Include="Assets\Script\Object\Monster2.cs" />
+     <Compile Include="Assets\Script\Object\Monster3.cs" />
+     <Compile Include="Assets\Script\Object\Monster4.cs" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Masked 1.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Text 2.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Masked 2.shader" />

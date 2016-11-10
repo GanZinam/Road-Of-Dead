@@ -12,7 +12,7 @@ namespace GM
         float DelayTime;                    // 딜레이 시각
         bool TimeStart = false;
         public UISlider progressBar;        // 게임진행 과정 스크롤 바
-        bool item_finish = false;           // 아이템 관련 
+        bool item_finish = false;           // 아이템 관련
 
         //@@ 시스템 - txt
         [SerializeField]
@@ -42,17 +42,6 @@ namespace GM
         [SerializeField]
         Transform shootPos;                 // 총 쏠 기준점
 
-        //@ 몬스터
-        int M1_count = 0;                   // 몬스터 1 수
-        int M2_count = 0;                   // 몬스터 2 수
-        Vector3 monsterSpawnPos;            // 몬스터 생성 위치
-
-        //@ 몬스터 생성
-        [SerializeField]
-        GameObject[] mon;                   // 몬스터 prefab
-        [SerializeField]
-        GameObject monsterParent;           // 몬스터 부모
-
         //@ 총 관리
         bool Reload_Check = false;          // 총알 갈고있을때 버튼 클릭 ㄴ
         float Reload_Time = 1.5f;           // 재장전 시간
@@ -71,9 +60,12 @@ namespace GM
         UILabel bulletsNumTxt;              // 현재 총알 수 txt
         [SerializeField]
         GameObject[] bulletsObjs;           // 총알 오브젝트 풀
-
         [SerializeField]
         GameObject mousePosObj;             // 터치한 총알 위치 표시해주는 오브젝트
+
+        //@맵
+        [SerializeField]
+        GameObject[] map;                   // 맵 prefab
 
 
         void Start()
@@ -98,6 +90,7 @@ namespace GM
         public void init()
         {
             GameManager.getInstance().init();
+            GameObject obj = NGUITools.AddChild(null,map[GM.GameManager.getInstance().map_num]) as GameObject;      //맵 불러오기
             DelayTime = 0.5f;       //총알 연사속도
         }
 
@@ -111,27 +104,29 @@ namespace GM
 
                 if (R_Start.Equals(1))
                 {
-                    monsterSpawnPos.x = -650f;
-                    monsterSpawnPos.y = Random.Range(-75, -310);
+                    GM.GameManager.getInstance().monsterSpawnPos.x = -650f;
+                    GM.GameManager.getInstance().monsterSpawnPos.y = Random.Range(-75, -310);
                 }
 
                 //@ 몬스터 생성
                 if (Input.GetKeyDown(KeyCode.F1))
                 {
-                    M1_count++;
-
-                    GameObject obj = NGUITools.AddChild(monsterParent, mon[0]) as GameObject;
-                    obj.transform.localPosition = monsterSpawnPos;
-                    obj.transform.localScale = new Vector3(0.3f, 0.3f);
-                    GameManager.getInstance().v_monster1.Add(obj);
+                    GM.GameManager.getInstance().Monster_1_creat();
                 }
                 else if (Input.GetKeyDown(KeyCode.F2))
                 {
-                    M2_count++;
-
-                    GameObject obj = NGUITools.AddChild(monsterParent, mon[1]) as GameObject;
-                    obj.transform.localPosition = monsterSpawnPos;
-                    GameManager.getInstance().v_monster2.Add(obj);
+                    GM.GameManager.getInstance().Monster_2_creat();
+                    
+                }
+                else if (Input.GetKeyDown(KeyCode.F3))
+                {
+                    GM.GameManager.getInstance().Monster_3_creat();
+                    
+                }
+                else if (Input.GetKeyDown(KeyCode.F4))
+                {
+                    GM.GameManager.getInstance().Monster_4_creat();
+                   
                 }
                 #endregion
 
@@ -524,5 +519,8 @@ namespace GM
 
        
         #endregion
+
+
+
     }
 }
