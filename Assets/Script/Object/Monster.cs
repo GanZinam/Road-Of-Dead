@@ -13,6 +13,7 @@ public class Monster : MonoBehaviour
 
     void Start()
     {
+       
 
         need_ = false;
         item_check = false;

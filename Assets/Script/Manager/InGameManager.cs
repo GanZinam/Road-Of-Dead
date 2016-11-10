@@ -90,8 +90,8 @@ namespace GM
         public void init()
         {
             GameManager.getInstance().init();
-            GameObject obj = NGUITools.AddChild(null,map[GM.GameManager.getInstance().map_num]) as GameObject;      //맵 불러오기
-            DelayTime = 0.5f;       //총알 연사속도
+            GameObject obj = NGUITools.AddChild(null, map[PlayerInfo.loadNum]) as GameObject;      //맵 불러오기
+            DelayTime = 0.0f;       //총알 연사속도
         }
 
 
@@ -100,14 +100,7 @@ namespace GM
             if (!GameManager.getInstance().pause)
             {
                 #region _MONSTER_CREATE_
-                int R_Start = 1;
-
-                if (R_Start.Equals(1))
-                {
-                    GM.GameManager.getInstance().monsterSpawnPos.x = -650f;
-                    GM.GameManager.getInstance().monsterSpawnPos.y = Random.Range(-75, -310);
-                }
-
+               
                 //@ 몬스터 생성
                 if (Input.GetKeyDown(KeyCode.F1))
                 {
@@ -195,7 +188,7 @@ namespace GM
 
                 //@ 게임 진행 프로그래스바
                 if (!GameManager.getInstance().isGameEnd)
-                    progressBar.value += Time.deltaTime * 0.03f;
+                    progressBar.value += Time.deltaTime * 0.01f;
 
                 if (progressBar.value >= (0.3f) && GameManager.getInstance().waveNum.Equals(0))
                 {

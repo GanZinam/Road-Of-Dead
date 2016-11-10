@@ -23,10 +23,10 @@ namespace GM
         public bool isGameEnd = false;      // 게임 결과창이 난 후
         [HideInInspector]
         public bool plzShaking = false;     // 흔들어야 될때
-        public UILabel touch_screen;        // 몬스터가 붙었을때 화면을 터치하시오 txt  
-        [HideInInspector]
-        public int map_num;                 // 이번게임 맵 번호
+        public UILabel touch_screen;        // 몬스터가 붙었을때 화면을 터치하시오 txt
         
+        public float start_time;            // 게임 시작 시간
+        public float Now_time;              // 마지막 체크 시간
 
         //@ 게임 UI
         public UISlider hpBar;              // hp 스크롤 바
@@ -114,6 +114,7 @@ namespace GM
             needShakeCount = 0;
             monsterKill = 0;
             nStickMonster = 0;
+            start_time = 0;
 
             nowMyMoneyTxt.text = PlayerPrefs.GetInt("Money") + "";
 
