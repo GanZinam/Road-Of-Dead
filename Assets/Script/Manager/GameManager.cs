@@ -286,7 +286,7 @@ namespace GM
 
             for (int j = 0; j < 7; j++)
             {
-                if (idx.Equals(string.Format("Item_{0}",j)))
+                if (idx.Equals(string.Format("Item_{0}", j)))
                 {
                     inputItemSlotTxt(i, j);
                     break;
