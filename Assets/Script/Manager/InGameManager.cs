@@ -95,13 +95,13 @@ namespace GM
         {
             GameManager.getInstance().init();
             GameObject obj = NGUITools.AddChild(null, map[PlayerInfo.loadNum]) as GameObject;      //맵 불러오기
-            DelayTime = 0.0f;       //총알 연사속도
+            DelayTime = 0.05f;       //총알 연사속도
         }
 
 
         void Update()
         {
-            if (!GameManager.getInstance().pause)
+            if (!GameManager.getInstance().pause && Time.timeScale.Equals(1))
             {
                 #region _MONSTER_CREATE_
                
@@ -142,7 +142,7 @@ namespace GM
                 else if (Input.GetMouseButton(0))
                 {
                     touchPos = new Vector2(1280.0f / Screen.width * Input.mousePosition.x, 720.0f / Screen.height * Input.mousePosition.y);
-                    if (720.0f / Screen.height * Input.mousePosition.y <= 292)
+                    if (720.0f / Screen.height * Input.mousePosition.y <= 395)
                     {
                         if (push_item[0] || push_item[1] || push_item[2] || push_item[3])
                         {
@@ -166,8 +166,6 @@ namespace GM
                                  
                                 float angle = Mathf.Atan2(touchPos.y - gunShootPos.transform.localPosition.y, touchPos.x - gunShootPos.transform.localPosition.x) * Mathf.Rad2Deg;
                                 gunObj.transform.localEulerAngles = new Vector3(0, 0, angle + 90);
-
-                                Debug.Log(angle);
 
                                 if (!GameManager.getInstance().Reload)
                                     delay(touchPos);       //총알
@@ -195,6 +193,7 @@ namespace GM
                             {
                                 GameManager.getInstance().inputItemSlotTxt(item_select,GameManager.getInstance().myItem[item_select].type);
                                 item_exit(i);
+                                GameManager.getInstance().item_slot[item_select].GetComponent<UI2DSprite>().color = Color.white;    
                             }
                         }
                     }
@@ -497,7 +496,7 @@ namespace GM
         #region _ITEM_USE_
         /**
          * @brief : 아이템 0번 수류탄
-         * @param num : 아이템 칸번호 (1 or 2)
+         * @param num : 아이템 칸번호 (0 or 1)
          */
         public void item0(int num)
         {
@@ -505,7 +504,7 @@ namespace GM
             {
                 item_use_dark.SetActive(true);
                 item_intro(0);
-                //GM.GameManager.getInstance().item_Image
+                GameManager.getInstance().item_slot[item_select].GetComponent<UI2DSprite>().color = Color.red;
             }
         }
 
@@ -519,8 +518,10 @@ namespace GM
             {
                 item_use_dark.SetActive(true);
                 item_intro(1);
+                GameManager.getInstance().item_slot[item_select].GetComponent<UI2DSprite>().color = Color.red;
             }
         }
+
         /**
          * @brief : 아이템 2번 최류탄
          * @param num : 아이템 칸번호 (1 or 2)
@@ -531,8 +532,10 @@ namespace GM
             {
                 item_use_dark.SetActive(true);
                 item_intro(2);
+                GameManager.getInstance().item_slot[item_select].GetComponent<UI2DSprite>().color = Color.red;
             }
         }
+
         /**
          * @brief : 아이템 3번 섬광탄
          * @param num : 아이템 칸번호 (1 or 2)
@@ -543,9 +546,11 @@ namespace GM
             {
                 item_use_dark.SetActive(true);
                 item_intro(3);
+                GameManager.getInstance().item_slot[item_select].GetComponent<UI2DSprite>().color = Color.red;
 
             }
         }
+
         /**
          * @brief : 아이템 4번 힐
          * @param num : 아이템 칸번호 (1 or 2)
@@ -559,6 +564,7 @@ namespace GM
                 item_exit(4);
             }
         }
+
         /**
          * @brief : 아이템 5번 전체폭격
          * @param num : 아이템 칸번호 (1 or 2)
@@ -571,6 +577,7 @@ namespace GM
                 item_exit(5);
             }
         }
+
         /**
          * @brief : 아이템 6번 아나뽕 (공속UP , 공격력UP)
          * @param num : 아이템 칸번호 (1 or 2)
@@ -587,7 +594,13 @@ namespace GM
        
         #endregion
 
-
+        /**
+         * @brief : 일시정지
+         */
+        public void Pausebt()
+        {
+            Time.timeScale = 0;
+        }
 
     }
 }

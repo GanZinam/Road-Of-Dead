@@ -17,5 +17,5 @@ public static class PlayerInfo
     // 맵 선택에 따른 정보
     public static int loadNum = 0; // 지나갈 거리 번호
 
-    public static int quest = 0;   // 퀘스트 타입
+    public static int[] quest = new int[3] { 0, 0, 0 };   // 퀘스트 타입
 }

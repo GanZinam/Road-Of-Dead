@@ -12,7 +12,8 @@ namespace GM
         public UILabel[] itemTxt;           // 게임내 가지고 갈 아이템 개수 txt
         public UI2DSprite[] itemImg;        // 게임내 가지고 갈 아이템 이미지
         public UILabel[] itemCostTxt;       // 아이템 코스트 txt
-        public UILabel[] itemManyTxt;       // 아이템 개수 txt                           
+        public UILabel[] itemManyTxt;       // 아이템 개수 txt       
+        public GameObject[] item_slot;       // 아이템 슬롯 오브젝트                    
 
         //@ 게임 진행 
         [HideInInspector]
@@ -117,6 +118,7 @@ namespace GM
             monsterKill = 0;
             nStickMonster = 0;
             start_time = 0;
+
 
             nowMyMoneyTxt.text = PlayerPrefs.GetInt("Money") + "";
 
@@ -333,6 +335,9 @@ namespace GM
             GameObject obj = NGUITools.AddChild(monsterParent, mon[0]) as GameObject;
             obj.transform.localPosition = monsterSpawnPos;
             obj.transform.localScale = new Vector3(0.3f, 0.3f);
+
+            obj.GetComponent<UI2DSprite>().depth = -(int)monsterSpawnPos.y+50;
+
             GameManager.getInstance().v_monster1.Add(obj);
         }
 
@@ -346,6 +351,9 @@ namespace GM
             GameObject obj = NGUITools.AddChild(monsterParent, mon[1]) as GameObject;
             obj.transform.localPosition = monsterSpawnPos;
             obj.transform.localScale = new Vector3(0.3f, 0.3f);
+
+            obj.GetComponent<UI2DSprite>().depth = -(int)monsterSpawnPos.y + 50;
+
             GameManager.getInstance().v_monster2.Add(obj);
         }
 
@@ -359,6 +367,9 @@ namespace GM
             GameObject obj = NGUITools.AddChild(monsterParent, mon[2]) as GameObject;
             obj.transform.localPosition = monsterSpawnPos;
             obj.transform.localScale = new Vector3(0.3f, 0.3f);
+
+            obj.GetComponent<UI2DSprite>().depth = -(int)monsterSpawnPos.y + 50;
+
             GameManager.getInstance().v_monster3.Add(obj);
         }
 
@@ -372,6 +383,9 @@ namespace GM
             GameObject obj = NGUITools.AddChild(monsterParent, mon[3]) as GameObject;
             obj.transform.localPosition = monsterSpawnPos;
             obj.transform.localScale = new Vector3(0.3f, 0.3f);
+
+            obj.GetComponent<UI2DSprite>().depth = -(int)monsterSpawnPos.y + 50;
+
             GameManager.getInstance().v_monster4.Add(obj);
         }
 

@@ -3,9 +3,15 @@ using System.Collections;
 
 public class Monster3 : Monster {
 
+    public override void init()
+    {
+        hp = 300;
+        speed = 0.35f;
+    }
+
     public override void attack()
     {
-        GM.GameManager.getInstance().hpBar.value -= 0.01f;
+        GM.GameManager.getInstance().hpBar.value -= 0.007f;
     }
 
     public override void move()

@@ -3,8 +3,8 @@ using System.Collections;
 
 public class Monster : MonoBehaviour
 {
-    public int hp = 10;             // 몬스터 hp
-    public float speed = 0.5f;      // 몬스터 이동 속도
+    public int hp;             // 몬스터 hp
+    public float speed;      // 몬스터 이동 속도
 
 
     bool need_;                     // 트럭에 붙어 있나 없나 체크
@@ -13,11 +13,10 @@ public class Monster : MonoBehaviour
 
     void Start()
     {
-       
-
         need_ = false;
         item_check = false;
 
+        init();
         StartCoroutine(update());
     }
 
@@ -62,7 +61,7 @@ public class Monster : MonoBehaviour
         {
             // 총알이 충돌됬을시 지우지 않고 안보이는 곳으로 이동시킨후 다시 사용
             other.gameObject.transform.localPosition = new Vector3(-1500, -2000);
-            hp -= 1;
+            hp -= 20;
         }
         if (other.gameObject.CompareTag("Item"))
         {
@@ -103,7 +102,8 @@ public class Monster : MonoBehaviour
     {
         if (item_check)
         {
-            hp -= 10;
+            hp -= 150;
+            gameObject.GetComponent<UI2DSprite>().color = Color.white;
         }
     }
         
@@ -113,7 +113,8 @@ public class Monster : MonoBehaviour
      */
     public void Move_camera()
     {
-        iTween.ShakePosition(GM.GameManager.getInstance().cam, iTween.Hash("x", 0.2f, "time", 1.0f));
+        iTween.ShakePosition(GM.GameManager.getInstance().cam, iTween.Hash("x", 0.2f, "time", Time.timeScale));
+
     }
 
     /**
@@ -130,4 +131,6 @@ public class Monster : MonoBehaviour
      * @brief 몬스터 벡터에서 삭제
      */
     public virtual void removeAtVector() { }
+
+    public virtual void init() { }
 }

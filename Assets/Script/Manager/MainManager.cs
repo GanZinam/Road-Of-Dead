@@ -30,14 +30,46 @@ namespace GM
 
         public Animator buttonAnim;
         int chatTxtCount = 0;
+        
+        [SerializeField]
+        Text[] myQuestTxt;
+        [SerializeField]
+        GameObject basicCanvas;
+
+        [SerializeField]
+        GameObject nowPos;
+
+        [SerializeField]
+        Transform[] mapPos;
 
         void Start()
         {
+            // 데이터 (추후 삭제)
+            PlayerPrefs.SetInt("NowMyPos", 0);
+            
             PlayerPrefs.SetInt("Map_0", 1);
             PlayerPrefs.SetInt("Map_1", 1);
             PlayerPrefs.SetInt("Map_2", 0);
             PlayerPrefs.SetInt("Map_3", 0);
             PlayerPrefs.SetInt("Map_4", 0);
+
+            PlayerPrefs.SetInt("Q_0_IS", 0);
+            PlayerPrefs.SetInt("Q_0_MONSTER_KILL", 0);
+
+            PlayerPrefs.SetInt("Money", 1000);
+            PlayerPrefs.SetInt("Item_0", 0);
+            PlayerPrefs.SetInt("Item_1", 1);
+            PlayerPrefs.SetInt("Item_2", 0);
+            PlayerPrefs.SetInt("Item_3", 0);
+            PlayerPrefs.SetInt("Item_4", 0);
+            PlayerPrefs.SetInt("Item_5", 0);
+            PlayerPrefs.SetInt("Item_6", 0);
+
+            // ===========================================================
+
+
+
+            nowPos.transform.position = mapPos[PlayerPrefs.GetInt("NowMyPos")].position;
 
             for (int i = 0; i < 5; i++)
             {
@@ -46,9 +78,27 @@ namespace GM
                     rocker[i].SetActive(false);
                 }
             }
+            
+            checkQuest();
+        }
 
-            PlayerInfo.quest = 1;
+        void checkQuest()
+        {
+            if (PlayerPrefs.GetInt("Q_0_IS").Equals(1))
+                PlayerInfo.quest[0] = 1;
 
+            int qNum = 0;
+
+            for (int i =0; i< PlayerInfo.quest.Length; i++)
+            {
+                if (!PlayerInfo.quest[i].Equals(0))
+                {
+                    if (PlayerInfo.quest[i].Equals(1))
+                    {
+                        myQuestTxt[qNum].text = "좀비 처치  ( " + PlayerPrefs.GetInt("Q_0_MOSNTER_KILL") + " / 100 )"; 
+                    }
+                }
+            }
         }
 
         /**
@@ -241,16 +291,17 @@ namespace GM
 
                     chatScript.Clear();
                     chatCanvas.SetActive(false);
+                    basicCanvas.SetActive(true);
                 }
             }
             else if (isChatFinish)
             {
+                Debug.Log("FINIS");
                 // 아니라면 다음 대사로 넘어감
                 chatTemp = "";
                 chatText.text = "";
                 sayingSpeed = 0.05f;
-
-                Debug.Log("FDS");
+                
                 if (nowScriptPart < chatScript.Count - 1)
                 {
                     chatting(chatScript[++nowScriptPart]);
@@ -259,36 +310,56 @@ namespace GM
                 {
                     chatScript.Clear();
                     chatCanvas.SetActive(false);
+                    basicCanvas.SetActive(true);
                 }
             }
         }
 
         public void YES()
         {
-            isChatFinish = true;
-            buttonAnim.SetTrigger("DONE");
-            chatCheck();
+            if (PlayerPrefs.GetInt("Q_0_IS").Equals(0))
+            {
+                PlayerPrefs.SetInt("Q_0_IS", 1);
+                PlayerPrefs.SetInt("Q_0_MONSTER_KILL", 0);
+
+                isChatFinish = true;
+                buttonAnim.SetTrigger("DONE");
+
+                chatCheck();
+
+                checkQuest();
+            }
         }
 
         public void NO()
         {
+            isChatFinish = true;
             buttonAnim.SetTrigger("DONE");
-            chatScript.Clear();
-            chatTemp = "";
-            chatText.text = "";
-            sayingSpeed = 0.05f;
+            
+            basicCanvas.SetActive(true);
         }
 
-        public void showMission()
+        public void showMission(int type)
         {
-            chatScript.Clear();
-            nowScriptPart = 0;
-            chatTxtCount = 0;
-            isChatFinish = false;
+            if (type.Equals(0) && PlayerPrefs.GetInt("Q_0_IS").Equals(0))
+            {
+                basicCanvas.SetActive(false);
 
-            chatScript.Add("0/0/주변에 좀비들이 많아 식량을 구하기가 너무 힘드네..@옆 마을로 가는김에 좀비 #1#0#0마리만 없애줄수 있겠나?/");
-            chatScript.Add("0/0/고맙네/");
-            chatting(chatScript[nowScriptPart]);
+                chatScript.Clear();
+                nowScriptPart = 0;
+                chatTxtCount = 0;
+                isChatFinish = false;
+
+                chatScript.Add("0/0/주변에 좀비들이 많아 식량을 구하기가 너무 힘드네..@옆 마을로 가는김에 좀비 #1#0#0마리만 없애줄수 있겠나?/");
+                chatScript.Add("0/0/고맙네/");
+                chatting(chatScript[nowScriptPart]);
+            }
+            else
+            {
+                Debug.Log("IS ALREADY HAVE");
+                chatCanvas.SetActive(false);
+                basicCanvas.SetActive(true);
+            }
         }
 
         #endregion
