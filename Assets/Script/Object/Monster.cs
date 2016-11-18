@@ -6,12 +6,14 @@ public class Monster : MonoBehaviour
     public int hp = 10;             // 몬스터 hp
     public float speed = 0.5f;      // 몬스터 이동 속도
 
+
     bool need_;                     // 트럭에 붙어 있나 없나 체크
     bool item_check;                // 아이템 안에 들어와있나 아닌가 체크
 
 
     void Start()
     {
+       
 
         need_ = false;
         item_check = false;
@@ -24,6 +26,11 @@ public class Monster : MonoBehaviour
         yield return null;
         if (hp <= 0)
         {
+            if (need_)
+            {
+                GM.GameManager.getInstance().nStickMonster -= 1;
+                GM.GameManager.getInstance().Shaking_check();
+            }
             GM.GameManager.getInstance().getMoney(100);
             removeAtVector();
             Destroy(gameObject);        //가까이 없을때만 공격 당해서 죽음
@@ -32,7 +39,7 @@ public class Monster : MonoBehaviour
         {
             move();     //움직이는 함수
 
-            if (200 <= gameObject.transform.localPosition.x)        //200 = 자동차 끝부분  need 가까이있으면 true되어 공격으로 ㄱ
+            if (318 <= gameObject.transform.localPosition.x)        //318 = 자동차 끝부분  need 가까이있으면 true되어 공격으로 ㄱ
             {
                 GM.GameManager.getInstance().touch_screen.gameObject.SetActive(true);   //몬스터가 붙었을때 화면을 터치하시오 txt 생성
                 GM.GameManager.getInstance().plzShaking = true;
@@ -40,10 +47,11 @@ public class Monster : MonoBehaviour
                 GM.GameManager.getInstance().nStickMonster += 1;
             }
         }
-        else                                //공격하는부분
+        else                                //몬스터가 공격하는부분
         {
             yield return new WaitForSeconds(0.5f);      //0.5초당 한번씩 공격  (몬스터 공격 딜레이 시간)
             attack();
+            Move_camera();
         }
         StartCoroutine(update());
     }
@@ -93,11 +101,19 @@ public class Monster : MonoBehaviour
      */
     public void boom_item_die()
     {
-        Debug.Log(1);
         if (item_check)
         {
             hp -= 10;
         }
+    }
+        
+    
+    /**
+     * @brief : 몬스터가 공격할때 카메라 흔들리는것
+     */
+    public void Move_camera()
+    {
+        iTween.ShakePosition(GM.GameManager.getInstance().cam, iTween.Hash("x", 0.2f, "time", 1.0f));
     }
 
     /**

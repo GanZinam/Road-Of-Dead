@@ -158,11 +158,14 @@
      <Compile Include="Assets\Script\Manager\InGameManager.cs" />
      <Compile Include="Assets\Script\Manager\MainManager.cs" />
      <Compile Include="Assets\Script\Manager\ReadyManager.cs" />
+     <Compile Include="Assets\Script\Map\Map1.cs" />
      <Compile Include="Assets\Script\Object\Background.cs" />
      <Compile Include="Assets\Script\Object\Bullet.cs" />
      <Compile Include="Assets\Script\Object\Monster.cs" />
      <Compile Include="Assets\Script\Object\Monster1.cs" />
      <Compile Include="Assets\Script\Object\Monster2.cs" />
+     <Compile Include="Assets\Script\Object\Monster3.cs" />
+     <Compile Include="Assets\Script\Object\Monster4.cs" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Masked 1.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Text 2.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Masked 2.shader" />
@@ -182,6 +185,7 @@
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored 1.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Premultiplied Colored.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Colored.shader" />
+     <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Text.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Packed.shader" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Transparent Packed 3.shader" />
@@ -193,6 +197,10 @@
  <Reference Include="UnityEngine.Networking">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
  </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{D6AD5253-5154-CA8D-DD4A-597C50D20D4E}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

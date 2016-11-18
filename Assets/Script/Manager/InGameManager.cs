@@ -12,7 +12,7 @@ namespace GM
         float DelayTime;                    // 딜레이 시각
         bool TimeStart = false;
         public UISlider progressBar;        // 게임진행 과정 스크롤 바
-        bool item_finish = false;           // 아이템 관련 
+        bool item_finish = false;           // 아이템 관련
 
         //@@ 시스템 - txt
         [SerializeField]
@@ -27,12 +27,9 @@ namespace GM
         Animator resultAnim;                // 결과창 애니메이션
 
         //@ 아이템
-        bool[] push_item = new bool[7];     // 아이템 눌렀는지             0.수류탄 1.화염병 2.최류탄 3.섬광탄 4.힐 5.전체폭격 6.아나뽕  
-        [HideInInspector]
-        public int item_num1;               // 아이템 1번에 선택된 아이템 번호  
-        [HideInInspector]
-        public int item_num2;               // 아이템 2번에 선택된 아이템 번호                                                                         
+        bool[] push_item = new bool[7];     // 아이템 눌렀는지             0.수류탄 1.화염병 2.최류탄 3.섬광탄 4.힐 5.전체폭격 6.아나뽕                                                                          
         public GameObject item_use_dark;    // 아이템 사용시 어두워짐
+        int item_select;                    // 아이템 몇번이 선택되어있는지
         
         [SerializeField]
         GameObject mousePositem;            // 터치한 아이템 위치 표시해주는 오브젝트
@@ -41,17 +38,6 @@ namespace GM
         Vector2 touchPos;                   // 내가 터치한 위치
         [SerializeField]
         Transform shootPos;                 // 총 쏠 기준점
-
-        //@ 몬스터
-        int M1_count = 0;                   // 몬스터 1 수
-        int M2_count = 0;                   // 몬스터 2 수
-        Vector3 monsterSpawnPos;            // 몬스터 생성 위치
-
-        //@ 몬스터 생성
-        [SerializeField]
-        GameObject[] mon;                   // 몬스터 prefab
-        [SerializeField]
-        GameObject monsterParent;           // 몬스터 부모
 
         //@ 총 관리
         bool Reload_Check = false;          // 총알 갈고있을때 버튼 클릭 ㄴ
@@ -71,10 +57,20 @@ namespace GM
         UILabel bulletsNumTxt;              // 현재 총알 수 txt
         [SerializeField]
         GameObject[] bulletsObjs;           // 총알 오브젝트 풀
-
         [SerializeField]
         GameObject mousePosObj;             // 터치한 총알 위치 표시해주는 오브젝트
 
+        //@맵
+        [SerializeField]
+        GameObject[] map;                   // 맵 prefab
+
+        const int MAX_BULLET = 200;
+
+        [SerializeField]
+        GameObject gunObj;
+
+        [SerializeField]
+        GameObject gunShootPos;
 
         void Start()
         {
@@ -98,7 +94,8 @@ namespace GM
         public void init()
         {
             GameManager.getInstance().init();
-            DelayTime = 0.5f;       //총알 연사속도
+            GameObject obj = NGUITools.AddChild(null, map[PlayerInfo.loadNum]) as GameObject;      //맵 불러오기
+            DelayTime = 0.0f;       //총알 연사속도
         }
 
 
@@ -107,31 +104,26 @@ namespace GM
             if (!GameManager.getInstance().pause)
             {
                 #region _MONSTER_CREATE_
-                int R_Start = 1;
-
-                if (R_Start.Equals(1))
-                {
-                    monsterSpawnPos.x = -650f;
-                    monsterSpawnPos.y = Random.Range(-75, -310);
-                }
-
+               
                 //@ 몬스터 생성
                 if (Input.GetKeyDown(KeyCode.F1))
                 {
-                    M1_count++;
-
-                    GameObject obj = NGUITools.AddChild(monsterParent, mon[0]) as GameObject;
-                    obj.transform.localPosition = monsterSpawnPos;
-                    obj.transform.localScale = new Vector3(0.3f, 0.3f);
-                    GameManager.getInstance().v_monster1.Add(obj);
+                    GM.GameManager.getInstance().Monster_1_creat();
                 }
                 else if (Input.GetKeyDown(KeyCode.F2))
                 {
-                    M2_count++;
-
-                    GameObject obj = NGUITools.AddChild(monsterParent, mon[1]) as GameObject;
-                    obj.transform.localPosition = monsterSpawnPos;
-                    GameManager.getInstance().v_monster2.Add(obj);
+                    GM.GameManager.getInstance().Monster_2_creat();
+                    
+                }
+                else if (Input.GetKeyDown(KeyCode.F3))
+                {
+                    GM.GameManager.getInstance().Monster_3_creat();
+                    
+                }
+                else if (Input.GetKeyDown(KeyCode.F4))
+                {
+                    GM.GameManager.getInstance().Monster_4_creat();
+                   
                 }
                 #endregion
 
@@ -169,6 +161,14 @@ namespace GM
                                 mousePosObj.SetActive(true);
                                 mousePosObj.transform.localPosition = touchPos - new Vector2(640, 360);
 
+                                //float angle = Mathf.Atan2(touchPos.y - gunShootPos.transform.localPosition.y, touchPos.x - gunShootPos.transform.localPosition.x) * Mathf.Rad2Deg;
+                                //transform.localEulerAngles = new Vector3(0, 0, -angle - 90);
+                                 
+                                float angle = Mathf.Atan2(touchPos.y - gunShootPos.transform.localPosition.y, touchPos.x - gunShootPos.transform.localPosition.x) * Mathf.Rad2Deg;
+                                gunObj.transform.localEulerAngles = new Vector3(0, 0, angle + 90);
+
+                                Debug.Log(angle);
+
                                 if (!GameManager.getInstance().Reload)
                                     delay(touchPos);       //총알
                             }
@@ -192,7 +192,10 @@ namespace GM
                         for (int i = 0; i < 4; i++)
                         {
                             if (push_item[i])
+                            {
+                                GameManager.getInstance().inputItemSlotTxt(item_select,GameManager.getInstance().myItem[item_select].type);
                                 item_exit(i);
+                            }
                         }
                     }
                 }
@@ -200,7 +203,7 @@ namespace GM
 
                 //@ 게임 진행 프로그래스바
                 if (!GameManager.getInstance().isGameEnd)
-                    progressBar.value += Time.deltaTime * 0.03f;
+                    progressBar.value += Time.deltaTime * 0.01f;
 
                 if (progressBar.value >= (0.3f) && GameManager.getInstance().waveNum.Equals(0))
                 {
@@ -232,7 +235,7 @@ namespace GM
                 {
                     reloadAnim.SetTrigger("Load");
 
-                    GameManager.getInstance().countBullet = 250;
+                    GameManager.getInstance().countBullet = MAX_BULLET;             
                     bulletsNumTxt.text = GameManager.getInstance().countBullet + "";
 
                     Reload_NowTime = 0.0f;
@@ -285,7 +288,7 @@ namespace GM
          */
         public void ReloadBt()
         {
-            if (!Reload_Check && !GameManager.getInstance().countBullet.Equals(250))
+            if (!Reload_Check && !GameManager.getInstance().countBullet.Equals(MAX_BULLET))
             {
                 reloadAnim.SetTrigger("Reload");    // 재장전 애니메이션
 
@@ -302,28 +305,57 @@ namespace GM
         {
             if (!GameManager.getInstance().pause)
             {
-                switch (item_num1)
+                item_select = 0;
+                switch (GameManager.getInstance().myItem[item_select].type)
                 {
                     case 0:
-                        item0(1);
+                        if (0 < PlayerPrefs.GetInt(string.Format("Item_{0}", GameManager.getInstance().myItem[item_select].type)))
+                        {
+                            GameManager.getInstance().UseItemData(GameManager.getInstance().myItem[item_select].type);
+                            item0(1);
+                        }
                         break;
                     case 1:
-                        item1(1);
+                        if (0 < PlayerPrefs.GetInt(string.Format("Item_{0}", GameManager.getInstance().myItem[item_select].type)))
+                        {
+                            GameManager.getInstance().UseItemData(GameManager.getInstance().myItem[item_select].type);
+                            item1(1);
+                        }
                         break;
                     case 2:
-                        item2(1);
+                        if (0 < PlayerPrefs.GetInt(string.Format("Item_{0}", GameManager.getInstance().myItem[item_select].type)))
+                        {
+                            GameManager.getInstance().UseItemData(GameManager.getInstance().myItem[item_select].type);
+                            item2(1);
+                        }
                         break;
                     case 3:
-                        item3(1);
+                        if (0 < PlayerPrefs.GetInt(string.Format("Item_{0}", GameManager.getInstance().myItem[item_select].type)))
+                        {
+                            GameManager.getInstance().UseItemData(GameManager.getInstance().myItem[item_select].type);
+                            item3(1);
+                        }
                         break;
                     case 4:
-                        item4(1);
+                        if (0 < PlayerPrefs.GetInt(string.Format("Item_{0}", GameManager.getInstance().myItem[item_select].type)))
+                        {
+                            GameManager.getInstance().UseItemData(GameManager.getInstance().myItem[item_select].type);
+                            item4(1);
+                        }
                         break;
                     case 5:
-                        item5(1);
+                        if (0 < PlayerPrefs.GetInt(string.Format("Item_{0}", GameManager.getInstance().myItem[item_select].type)))
+                        {
+                            GameManager.getInstance().UseItemData(GameManager.getInstance().myItem[item_select].type);
+                            item5(1);
+                        }
                         break;
                     case 6:
-                        item6(1);
+                        if (0 < PlayerPrefs.GetInt(string.Format("Item_{0}", GameManager.getInstance().myItem[item_select].type)))
+                        {
+                            GameManager.getInstance().UseItemData(GameManager.getInstance().myItem[item_select].type);
+                            item6(1);
+                        }
                         break;
                     default:
                         break;
@@ -332,34 +364,64 @@ namespace GM
         }
 
         /**
-         * @brief : 아이템 2 사용 버튼 ( 피 회복 )
+         * @brief : 아이템 2 사용 버튼
          */
         public void item1_Bt()
         {
             if (!GameManager.getInstance().pause)
             {
-                switch (item_num2)
+                item_select = 1;
+                switch (GameManager.getInstance().myItem[item_select].type)
                 {
                     case 0:
-                        item0(2);
+                        if (0 < PlayerPrefs.GetInt(string.Format("Item_{0}", GameManager.getInstance().myItem[item_select].type)))
+                        {
+                            GameManager.getInstance().UseItemData(GameManager.getInstance().myItem[item_select].type);
+                            item0(2);
+                        }
                         break;
                     case 1:
-                        item1(2);
+                        if (0 < PlayerPrefs.GetInt(string.Format("Item_{0}", GameManager.getInstance().myItem[item_select].type)))
+                        {
+                            Debug.Log(GameManager.getInstance().myItem[item_select].type);
+                            GameManager.getInstance().UseItemData(GameManager.getInstance().myItem[item_select].type);
+                            item1(2);
+                        }
                         break;
                     case 2:
-                        item2(2);
+                        if (0 < PlayerPrefs.GetInt(string.Format("Item_{0}", GameManager.getInstance().myItem[item_select].type)))
+                        {
+                            GameManager.getInstance().UseItemData(GameManager.getInstance().myItem[item_select].type);
+                            item2(2);
+                        }
                         break;
                     case 3:
-                        item3(2);
+                        if (0 < PlayerPrefs.GetInt(string.Format("Item_{0}", GameManager.getInstance().myItem[item_select].type)))
+                        {
+                            GameManager.getInstance().UseItemData(GameManager.getInstance().myItem[item_select].type);
+                            item3(2);
+                        }
                         break;
                     case 4:
-                        item4(2);
+                        if (0 < PlayerPrefs.GetInt(string.Format("Item_{0}", GameManager.getInstance().myItem[item_select].type)))
+                        {
+                            GameManager.getInstance().UseItemData(GameManager.getInstance().myItem[item_select].type);
+                            item4(2);
+                        }
                         break;
                     case 5:
-                        item5(2);
+                        if (0 < PlayerPrefs.GetInt(string.Format("Item_{0}", GameManager.getInstance().myItem[item_select].type)))
+                        {
+                            GameManager.getInstance().UseItemData(GameManager.getInstance().myItem[item_select].type);
+                            item5(2);
+                        }
                         break;
                     case 6:
-                        item6(2);
+                        if (0 < PlayerPrefs.GetInt(string.Format("Item_{0}", GameManager.getInstance().myItem[item_select].type)))
+                        {
+                            GameManager.getInstance().UseItemData(GameManager.getInstance().myItem[item_select].type);
+                            item6(2);
+                        }
                         break;
                     default:
                         break;
@@ -524,5 +586,8 @@ namespace GM
 
        
         #endregion
+
+
+
     }
 }
