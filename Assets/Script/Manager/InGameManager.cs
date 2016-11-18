@@ -44,7 +44,7 @@ namespace GM
 
         //@ 총 관리
         bool Reload_Check = false;          // 총알 갈고있을때 버튼 클릭 ㄴ
-        float Reload_Time = 1f;           // 재장전 시간
+        float Reload_Time = 1.5f;           // 재장전 시간
         float Reload_NowTime;
         float Bullet_num;                   // 발사된 총알수  
 
@@ -67,8 +67,6 @@ namespace GM
         [SerializeField]
         GameObject[] map;                   // 맵 prefab
 
-        [SerializeField]
-        GameObject gunObj;
 
         void Start()
         {
@@ -158,11 +156,6 @@ namespace GM
                                 nowtime = 0f;
                                 mousePosObj.SetActive(true);
                                 mousePosObj.transform.localPosition = touchPos - new Vector2(640, 360);
-
-                                 
-                                float angle = Mathf.Atan2(touchPos.y - gunObj.transform.localPosition.y, touchPos.x - gunObj.transform.localPosition.x) * Mathf.Rad2Deg;
-                                gunObj.transform.localEulerAngles = new Vector3(0, 0, -angle + 35);
-
 
                                 if (!GameManager.getInstance().Reload)
                                     delay(touchPos);       //총알
