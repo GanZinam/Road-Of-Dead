@@ -15,7 +15,7 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-        if ((transform.localPosition.x > -150 && transform.localPosition.y > -70 && transform.localPosition.x < 1330 && transform.localPosition.y < 770))
+        if ((transform.localPosition.x > -100 && transform.localPosition.y > -70 && transform.localPosition.x < 1330 && transform.localPosition.y < 770))
         {
             transform.Translate(Vector3.up * Time.deltaTime * 10);
         }
