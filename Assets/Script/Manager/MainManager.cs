@@ -56,9 +56,9 @@ namespace GM
             PlayerPrefs.SetInt("Q_0_IS", 0);
             PlayerPrefs.SetInt("Q_0_MONSTER_KILL", 0);
 
-            PlayerPrefs.SetInt("Money", 1000);
+            PlayerPrefs.SetInt("Money", 10000);
             PlayerPrefs.SetInt("Item_0", 0);
-            PlayerPrefs.SetInt("Item_1", 1);
+            PlayerPrefs.SetInt("Item_1", 0);
             PlayerPrefs.SetInt("Item_2", 0);
             PlayerPrefs.SetInt("Item_3", 0);
             PlayerPrefs.SetInt("Item_4", 0);

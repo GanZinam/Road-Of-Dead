@@ -135,10 +135,13 @@ namespace GM
             itemTxt[0].text = "";
             itemTxt[1].text = "";
 
-            itemCostTxt[0].text = 10 + "";
-            itemCostTxt[1].text = 20 + "";
-            itemCostTxt[2].text = 30 + "";
-            itemCostTxt[3].text = 40 + "";
+            itemCostTxt[0].text = 300 + "";
+            itemCostTxt[1].text = 300 + "";
+            itemCostTxt[2].text = 300 + "";
+            itemCostTxt[3].text = 300 + "";
+            itemCostTxt[4].text = 500 + "";
+            itemCostTxt[5].text = 1500 + "";
+            itemCostTxt[6].text = 3000 + "";
 
 
         }

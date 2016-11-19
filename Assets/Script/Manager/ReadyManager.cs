@@ -35,11 +35,42 @@ namespace GM
          */
         public void buyItem(string name)
         {
+            int money = 0;
+
+
             for (int j = 0; j < 7; j++)
             {
-                if (name.Equals(string.Format("Item_{0}", j)) && PlayerPrefs.GetInt("Money") >= 10)
+                if (j.Equals(0))
                 {
-                    setItemPrefData(j, 10);
+                    money = 300;
+                }
+                else if (j.Equals(1))
+                {
+                    money = 300;
+                }
+                else if (j.Equals(2))
+                {
+                    money = 300;
+                }
+                else if (j.Equals(3))
+                {
+                    money = 300;
+                }
+                else if (j.Equals(4))
+                {
+                    money = 500;
+                }
+                else if (j.Equals(5))
+                {
+                    money = 1500;
+                }
+                else if (j.Equals(6))
+                {
+                    money = 3000;
+                }
+                if (name.Equals(string.Format("Item_{0}", j)) && PlayerPrefs.GetInt("Money") >= money)
+                {
+                    setItemPrefData(j, money);
                     break;
                 }
             }
