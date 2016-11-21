@@ -64,6 +64,10 @@ namespace GM
         [SerializeField]
         GameObject[] map;                   // 맵 prefab
 
+        //@@ 총방향 계산
+        public GameObject personPos;        // 팔 부모
+        public GameObject PlayerPos;        // 팔 부모
+
         const int MAX_BULLET = 200;
 
         [SerializeField]
@@ -74,9 +78,9 @@ namespace GM
 
         void Start()
         {
-            PlayerPrefs.SetInt("Money", 1000);
+            PlayerPrefs.SetInt("Money", 10000);
             PlayerPrefs.SetInt("Item_0", 0);
-            PlayerPrefs.SetInt("Item_1", 1);
+            PlayerPrefs.SetInt("Item_1", 0);
             PlayerPrefs.SetInt("Item_2", 0);
             PlayerPrefs.SetInt("Item_3", 0);
             PlayerPrefs.SetInt("Item_4", 0);
@@ -130,7 +134,7 @@ namespace GM
                 #region _SHOOT_BULLET_
     
                 nowtime += Time.smoothDeltaTime;
-                
+                 //&& 1280.0f / Screen.width * Input.mousePosition.x <= 780
                 
                 if (Input.GetMouseButtonDown(0))
                 {
@@ -142,7 +146,8 @@ namespace GM
                 else if (Input.GetMouseButton(0))
                 {
                     touchPos = new Vector2(1280.0f / Screen.width * Input.mousePosition.x, 720.0f / Screen.height * Input.mousePosition.y);
-                    if (720.0f / Screen.height * Input.mousePosition.y <= 395)
+                    Debug.Log(touchPos.x);
+                    if (720.0f / Screen.height * Input.mousePosition.y <= 395 && 1280.0f / Screen.width * Input.mousePosition.x <= 920)
                     {
                         if (push_item[0] || push_item[1] || push_item[2] || push_item[3])
                         {
@@ -161,12 +166,11 @@ namespace GM
                                 mousePosObj.SetActive(true);
                                 mousePosObj.transform.localPosition = touchPos - new Vector2(640, 360);
 
-                                //float angle = Mathf.Atan2(touchPos.y - gunShootPos.transform.localPosition.y, touchPos.x - gunShootPos.transform.localPosition.x) * Mathf.Rad2Deg;
-                                //transform.localEulerAngles = new Vector3(0, 0, -angle - 90);
-                                 
-                                float angle = Mathf.Atan2(touchPos.y - gunShootPos.transform.localPosition.y, touchPos.x - gunShootPos.transform.localPosition.x) * Mathf.Rad2Deg;
-                                gunObj.transform.localEulerAngles = new Vector3(0, 0, angle + 90);
+                                Vector2 _shootpos = personPos.transform.localPosition + PlayerPos.transform.localPosition;
 
+                                float angle = Mathf.Atan2(touchPos.y - _shootpos.y, touchPos.x - _shootpos.x) * Mathf.Rad2Deg;
+                                gunObj.transform.localEulerAngles = new Vector3(0, 0, angle + 180);
+                                
                                 if (!GameManager.getInstance().Reload)
                                     delay(touchPos);       //총알
                             }
@@ -208,12 +212,14 @@ namespace GM
                 {
                     nowWaveTxt.text = "WAVE 1";
                     waveAnim.SetTrigger("wave");
+                    GameManager.getInstance().wave_start = true;
                     GameManager.getInstance().waveNum++;
                 }
                 else if (progressBar.value >= (0.7f) && GameManager.getInstance().waveNum.Equals(1))
                 {
                     nowWaveTxt.text = "WAVE 2";
                     waveAnim.SetTrigger("wave");
+                    GameManager.getInstance().wave_start = true;
                     GameManager.getInstance().waveNum++;
                 }
                 else if (progressBar.value >= 1)

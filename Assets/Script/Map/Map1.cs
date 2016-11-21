@@ -3,8 +3,9 @@ using System.Collections;
 
 public class Map1 : MonoBehaviour {
 
-    float Make_speed = 0.8f;           //몬스터 나오는 시간
-
+    float Make_speed = 0.8f;            //몬스터 나오는 시간
+    float Make_speed_w = 0.5f;          //몬스터 나오는 시간 (웨이브)
+    int Wave_num=0;                     //웨이브 수
 
 	void Update () 
     {
@@ -60,7 +61,7 @@ public class Map1 : MonoBehaviour {
                 }
             }
             //@70초 이후에 나오는 몬스터
-            else if (GM.GameManager.getInstance().start_time <= 70f && GM.GameManager.getInstance().start_time - GM.GameManager.getInstance().Now_time >= Make_speed)
+            else if (GM.GameManager.getInstance().start_time >= 70f && GM.GameManager.getInstance().start_time - GM.GameManager.getInstance().Now_time >= Make_speed)
             {
                 GM.GameManager.getInstance().Now_time = GM.GameManager.getInstance().start_time;
 
@@ -97,6 +98,82 @@ public class Map1 : MonoBehaviour {
                 {
                     Monster_position();
                     GM.GameManager.getInstance().Monster_3_creat();
+                }
+            }
+            if(GM.GameManager.getInstance().wave_start &&GM.GameManager.getInstance().start_time - GM.GameManager.getInstance().Now_time_w >= Make_speed_w&& GM.GameManager.getInstance().waveNum.Equals(1))
+            {
+                GM.GameManager.getInstance().Now_time_w = GM.GameManager.getInstance().start_time;
+                Wave_num++;
+
+                switch(Wave_num)
+                {
+                    case 1:
+                        for (int i = 0; i < 3; i++)
+                        {
+                            Monster_position();
+                            GM.GameManager.getInstance().Monster_3_creat();
+                        }
+                            break;
+                    case 2:
+                            Monster_position();
+                            GM.GameManager.getInstance().Monster_1_creat();
+                        break;
+                    case 3:
+                        Monster_position();
+                        GM.GameManager.getInstance().Monster_1_creat();
+                        Monster_position();
+                        GM.GameManager.getInstance().Monster_2_creat();
+                        Monster_position();
+                        GM.GameManager.getInstance().Monster_1_creat();
+                        break;
+                    case 4:
+                        Monster_position();
+                        GM.GameManager.getInstance().Monster_3_creat();
+                        Wave_num = 0;
+                        GM.GameManager.getInstance().wave_start = false;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else if (GM.GameManager.getInstance().wave_start && GM.GameManager.getInstance().start_time - GM.GameManager.getInstance().Now_time_w >= Make_speed_w && GM.GameManager.getInstance().waveNum.Equals(2))
+            {
+                GM.GameManager.getInstance().Now_time_w = GM.GameManager.getInstance().start_time;
+                Wave_num++;
+
+                switch (Wave_num)
+                {
+                    case 1:
+                        for (int i = 0; i < 2; i++)
+                        {
+                            Monster_position();
+                            GM.GameManager.getInstance().Monster_4_creat();
+                        }
+                        break;
+                    case 2:
+                        Monster_position();
+                        GM.GameManager.getInstance().Monster_1_creat();
+                        Monster_position();
+                        GM.GameManager.getInstance().Monster_2_creat();
+                        Monster_position();
+                        GM.GameManager.getInstance().Monster_1_creat();
+                        break;
+                    case 3:
+                        Monster_position();
+                        GM.GameManager.getInstance().Monster_1_creat();
+                        Monster_position();
+                        GM.GameManager.getInstance().Monster_1_creat();
+                        break;
+                    case 4:
+                        Monster_position();
+                        GM.GameManager.getInstance().Monster_3_creat();
+                        Monster_position();
+                        GM.GameManager.getInstance().Monster_3_creat();
+                        Wave_num = 0;
+                        GM.GameManager.getInstance().wave_start = false;
+                        break;
+                    default:
+                        break;
                 }
             }
         }

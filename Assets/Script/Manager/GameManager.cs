@@ -19,6 +19,8 @@ namespace GM
         [HideInInspector]
         public int waveNum = 0;             // 현 웨이브 수
         [HideInInspector]
+        public bool wave_start = false;             // 웨이브 스타트
+        [HideInInspector]
         public bool pause = false;          // 게임 일시정지
         [HideInInspector]
         public bool isGameEnd = false;      // 게임 결과창이 난 후
@@ -28,6 +30,7 @@ namespace GM
         
         public float start_time;            // 게임 시작 시간
         public float Now_time;              // 마지막 체크 시간
+        public float Now_time_w;              // 마지막 체크 시간 (웨이브)
 
         //@ 게임 UI
         public UISlider hpBar;              // hp 스크롤 바
@@ -110,6 +113,7 @@ namespace GM
             v_monster4.Clear();
 
             waveNum = 0;
+            wave_start = false;
             pause = true;
             isGameEnd = false;
             plzShaking = false;
