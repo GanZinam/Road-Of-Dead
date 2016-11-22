@@ -61,7 +61,7 @@ public class Monster : MonoBehaviour
         {
             // 총알이 충돌됬을시 지우지 않고 안보이는 곳으로 이동시킨후 다시 사용
             other.gameObject.transform.localPosition = new Vector3(-1500, -2000);
-            hp -= 20;
+            hp -= GM.GameManager.getInstance().Bullet_Damege;
         }
         if (other.gameObject.CompareTag("Item"))
         {

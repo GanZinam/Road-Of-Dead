@@ -13,24 +13,27 @@ namespace GM
         public UI2DSprite[] itemImg;        // 게임내 가지고 갈 아이템 이미지
         public UILabel[] itemCostTxt;       // 아이템 코스트 txt
         public UILabel[] itemManyTxt;       // 아이템 개수 txt       
-        public GameObject[] item_slot;       // 아이템 슬롯 오브젝트                    
+        public GameObject[] item_slot;      // 아이템 슬롯 오브젝트                    
 
         //@ 게임 진행 
         [HideInInspector]
         public int waveNum = 0;             // 현 웨이브 수
         [HideInInspector]
-        public bool wave_start = false;             // 웨이브 스타트
+        public bool wave_start = false;     // 웨이브 스타트
         [HideInInspector]
         public bool pause = false;          // 게임 일시정지
         [HideInInspector]
         public bool isGameEnd = false;      // 게임 결과창이 난 후
         [HideInInspector]
         public bool plzShaking = false;     // 흔들어야 될때
-        public GameObject touch_screen;        // 몬스터가 붙었을때 화면을 터치하시오 txt
-        
+        public GameObject touch_screen;     // 몬스터가 붙었을때 화면을 터치하시오 txt
+
+        public float wave1_time;            // 1번째 웨이브 시간
+        public float wave2_time;            // 2번째 웨이브 시간
+
         public float start_time;            // 게임 시작 시간
         public float Now_time;              // 마지막 체크 시간
-        public float Now_time_w;              // 마지막 체크 시간 (웨이브)
+        public float Now_time_w;            // 마지막 체크 시간 (웨이브)
 
         //@ 게임 UI
         public UISlider hpBar;              // hp 스크롤 바
@@ -67,6 +70,8 @@ namespace GM
         public bool Reload = false;         // 총 장전중인지 아닌지
         [HideInInspector]
         public int countBullet = 200;       // 총알 총 갯수
+        [HideInInspector]
+        public int Bullet_Damege = 20;
 
         //@ 몬스터 벡터
         [HideInInspector]

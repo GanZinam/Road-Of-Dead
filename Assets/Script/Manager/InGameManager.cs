@@ -9,27 +9,31 @@ namespace GM
     {
         //@ 시스템
         float nowtime;                      // 현재 시각
-        float DelayTime;                    // 딜레이 시각
+        float Bullet_DelayTime;             // 총알 연사속도
         bool TimeStart = false;
         public UISlider progressBar;        // 게임진행 과정 스크롤 바
         bool item_finish = false;           // 아이템 관련
 
+        public GameObject Blank;            // 검은 오파시티 화면
+        public GameObject PauseBG;          // 일시정지 화면
+
         //@@ 시스템 - txt
         [SerializeField]
         UILabel nowWaveTxt;                 // 현재 웨이브 txt
-        [SerializeField]
-        UILabel[] killLabel;                // 죽인 몬스터 txt
 
         //@@ 시스템 - 애니메이션
         [SerializeField]
         Animator waveAnim;                  // 웨이브 애니메이션
         [SerializeField]
         Animator resultAnim;                // 결과창 애니메이션
+        [SerializeField]
+        GameObject Tier;                    // 타이어 애니메이션
 
         //@ 아이템
         bool[] push_item = new bool[7];     // 아이템 눌렀는지             0.수류탄 1.화염병 2.최류탄 3.섬광탄 4.힐 5.전체폭격 6.아나뽕                                                                          
         public GameObject item_use_dark;    // 아이템 사용시 어두워짐
         int item_select;                    // 아이템 몇번이 선택되어있는지
+        float ppong_startTime;              // 아이템 6.아나뽕 지속시간
         
         [SerializeField]
         GameObject mousePositem;            // 터치한 아이템 위치 표시해주는 오브젝트
@@ -41,7 +45,7 @@ namespace GM
 
         //@ 총 관리
         bool Reload_Check = false;          // 총알 갈고있을때 버튼 클릭 ㄴ
-        float Reload_Time = 1.5f;           // 재장전 시간
+        float Reload_Time = 1.0f;           // 재장전 시간
         float Reload_NowTime;
         float Bullet_num;                   // 발사된 총알수  
 
@@ -99,7 +103,7 @@ namespace GM
         {
             GameManager.getInstance().init();
             GameObject obj = NGUITools.AddChild(null, map[PlayerInfo.loadNum]) as GameObject;      //맵 불러오기
-            DelayTime = 0.05f;       //총알 연사속도
+            Bullet_DelayTime = 0.05f;
         }
 
 
@@ -107,30 +111,8 @@ namespace GM
         {
             if (!GameManager.getInstance().pause && Time.timeScale.Equals(1))
             {
-                #region _MONSTER_CREATE_
-               
-                //@ 몬스터 생성
-                if (Input.GetKeyDown(KeyCode.F1))
-                {
-                    GM.GameManager.getInstance().Monster_1_creat();
-                }
-                else if (Input.GetKeyDown(KeyCode.F2))
-                {
-                    GM.GameManager.getInstance().Monster_2_creat();
-                    
-                }
-                else if (Input.GetKeyDown(KeyCode.F3))
-                {
-                    GM.GameManager.getInstance().Monster_3_creat();
-                    
-                }
-                else if (Input.GetKeyDown(KeyCode.F4))
-                {
-                    GM.GameManager.getInstance().Monster_4_creat();
-                   
-                }
-                #endregion
-
+                Tier.GetComponent<Animator>().Play("GO");           // 타이어 애니메이션 실행
+                
                 #region _SHOOT_BULLET_
     
                 nowtime += Time.smoothDeltaTime;
@@ -146,7 +128,7 @@ namespace GM
                 else if (Input.GetMouseButton(0))
                 {
                     touchPos = new Vector2(1280.0f / Screen.width * Input.mousePosition.x, 720.0f / Screen.height * Input.mousePosition.y);
-                    Debug.Log(touchPos.x);
+
                     if (720.0f / Screen.height * Input.mousePosition.y <= 395 && 1280.0f / Screen.width * Input.mousePosition.x <= 920)
                     {
                         if (push_item[0] || push_item[1] || push_item[2] || push_item[3])
@@ -158,9 +140,8 @@ namespace GM
 
                         }
                         else if (item_finish.Equals(false))
-
                         {
-                            if (DelayTime <= nowtime)
+                            if (Bullet_DelayTime <= nowtime)
                             {
                                 nowtime = 0f;
                                 mousePosObj.SetActive(true);
@@ -208,14 +189,14 @@ namespace GM
                 if (!GameManager.getInstance().isGameEnd)
                     progressBar.value += Time.deltaTime * 0.01f;
 
-                if (progressBar.value >= (0.3f) && GameManager.getInstance().waveNum.Equals(0))
+                if (progressBar.value >= (GM.GameManager.getInstance().wave1_time) && GameManager.getInstance().waveNum.Equals(0))
                 {
                     nowWaveTxt.text = "WAVE 1";
                     waveAnim.SetTrigger("wave");
                     GameManager.getInstance().wave_start = true;
                     GameManager.getInstance().waveNum++;
                 }
-                else if (progressBar.value >= (0.7f) && GameManager.getInstance().waveNum.Equals(1))
+                else if (progressBar.value >= (GM.GameManager.getInstance().wave2_time) && GameManager.getInstance().waveNum.Equals(1))
                 {
                     nowWaveTxt.text = "WAVE 2";
                     waveAnim.SetTrigger("wave");
@@ -248,6 +229,18 @@ namespace GM
                     TimeStart = false;
                     Reload_Check = false;
                     Bullet_num = 0f;
+                }
+            }
+
+            //@아이템 지속시간
+            if(push_item[6])
+            {
+                ppong_startTime += Time.smoothDeltaTime;
+                if (ppong_startTime >= 10.0f)
+                {
+                    Bullet_DelayTime = 0.05f;
+                    GM.GameManager.getInstance().Bullet_Damege = 20;
+                    item_exit(6);
                 }
             }
         }
@@ -441,33 +434,59 @@ namespace GM
         public void gameEnd(bool isClear)
         {
             GameManager.getInstance().isGameEnd = true;
+            Blank.SetActive(true);
             if (isClear)
             {
-                killLabel[1].text = "KILL : " + GameManager.getInstance().monsterKill;
                 resultAnim.SetTrigger("Success"); // 성공
             }
             else
             {
-                killLabel[0].text = "KILL : " + GameManager.getInstance().monsterKill;
                 resultAnim.SetTrigger("Fail");
             }
         }
 
         /**
-         * @brief : 게임 클리어 후 버튼
+         * @brief : Continue 버튼 (게임성공시)
          */
-        public void gameClearBT()
+        public void gameClear_ContinueBT()
         {
+            Debug.Log("GameClear_COntinue");
             Application.LoadLevel("MainScene");
         }
 
         /**
-         * @brief : 게임 실패 후 버튼
+         * @brief : Continue 버튼 (게임실패시)
          */
-        public void gameFailBT()
+        public void gameFail_ContinueBT()
         {
+            Debug.Log("GameFail_Continue");
             Application.LoadLevel("MainScene");
         }
+
+        /**
+         * @brief : Retry 버튼 (게임실패시,게임정지시)
+         */
+        public void game_RetryBT()
+        {
+            Debug.Log("Game_Retry");
+        }
+
+        /**
+         * @brief : Exit 버튼 (게임정지시)
+         */
+        public void gamePause_ExitBT()
+        {
+            Debug.Log("GamePause_Exit");
+        }
+
+        /**
+         * @brief : Resume 버튼 (게임정지시)
+         */
+        public void gamePause_ResumeBT()
+        {
+            Debug.Log("GamePause_Resume");
+        }
+
 
         /**
          * @brief : 아이템 선택 버튼 클릭
@@ -593,7 +612,8 @@ namespace GM
             if (!GameManager.getInstance().pause)
             {
                 item_intro(6);
-                item_exit(6);
+                Bullet_DelayTime = 0.03f;
+                GM.GameManager.getInstance().Bullet_Damege = 50;
             }
         }
 
@@ -605,7 +625,10 @@ namespace GM
          */
         public void Pausebt()
         {
+            PauseBG.SetActive(true);
+            Blank.SetActive(true);
             Time.timeScale = 0;
+            GameManager.getInstance().pause = false;
         }
 
     }

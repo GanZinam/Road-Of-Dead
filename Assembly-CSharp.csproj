@@ -159,6 +159,7 @@
      <Compile Include="Assets\Script\Manager\MainManager.cs" />
      <Compile Include="Assets\Script\Manager\ReadyManager.cs" />
      <Compile Include="Assets\Script\Map\Map1.cs" />
+     <Compile Include="Assets\Script\Map\Map2.cs" />
      <Compile Include="Assets\Script\Object\Background.cs" />
      <Compile Include="Assets\Script\Object\Bullet.cs" />
      <Compile Include="Assets\Script\Object\Monster.cs" />

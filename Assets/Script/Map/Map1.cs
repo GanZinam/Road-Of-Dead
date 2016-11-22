@@ -3,9 +3,18 @@ using System.Collections;
 
 public class Map1 : MonoBehaviour {
 
-    float Make_speed = 0.8f;            //몬스터 나오는 시간
-    float Make_speed_w = 0.5f;          //몬스터 나오는 시간 (웨이브)
-    int Wave_num=0;                     //웨이브 수
+    float Make_speed;               //몬스터 나오는 시간
+    float Make_speed_w;             //몬스터 나오는 시간 (웨이브)
+    int Wave_num;                   //웨이브 수
+
+    void Start()
+    {
+        Make_speed = 0.8f;
+        Make_speed_w = 0.5f;
+        Wave_num = 0;
+        GM.GameManager.getInstance().wave1_time = 0.3f;
+        GM.GameManager.getInstance().wave2_time = 0.7f;
+    }
 
 	void Update () 
     {
@@ -100,6 +109,8 @@ public class Map1 : MonoBehaviour {
                     GM.GameManager.getInstance().Monster_3_creat();
                 }
             }
+            
+            //@웨이브1
             if(GM.GameManager.getInstance().wave_start &&GM.GameManager.getInstance().start_time - GM.GameManager.getInstance().Now_time_w >= Make_speed_w&& GM.GameManager.getInstance().waveNum.Equals(1))
             {
                 GM.GameManager.getInstance().Now_time_w = GM.GameManager.getInstance().start_time;
@@ -136,6 +147,7 @@ public class Map1 : MonoBehaviour {
                         break;
                 }
             }
+            //@웨이브2
             else if (GM.GameManager.getInstance().wave_start && GM.GameManager.getInstance().start_time - GM.GameManager.getInstance().Now_time_w >= Make_speed_w && GM.GameManager.getInstance().waveNum.Equals(2))
             {
                 GM.GameManager.getInstance().Now_time_w = GM.GameManager.getInstance().start_time;

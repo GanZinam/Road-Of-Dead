@@ -18,6 +18,7 @@ namespace GM
             readyPop.SetBool("Quit", true);
             startPop.SetBool("Start", true);
             StartCoroutine(waitingStart());
+            
         }
 
         /**
