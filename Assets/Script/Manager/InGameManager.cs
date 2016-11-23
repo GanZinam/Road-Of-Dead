@@ -469,6 +469,13 @@ namespace GM
         public void game_RetryBT()
         {
             Debug.Log("Game_Retry");
+
+            PauseBG.SetActive(false);
+            Blank.SetActive(false);
+            Time.timeScale = 1;
+            GameManager.getInstance().pause = false;
+
+            Application.LoadLevel("InGameScene");
         }
 
         /**
@@ -476,6 +483,10 @@ namespace GM
          */
         public void gamePause_ExitBT()
         {
+            Time.timeScale = 1;
+            GameManager.getInstance().pause = false;
+
+            Application.LoadLevel("MainScene");
             Debug.Log("GamePause_Exit");
         }
 
@@ -485,6 +496,11 @@ namespace GM
         public void gamePause_ResumeBT()
         {
             Debug.Log("GamePause_Resume");
+
+            PauseBG.SetActive(false);
+            Blank.SetActive(false);
+            Time.timeScale = 1;
+            GameManager.getInstance().pause = false;
         }
 
 
@@ -628,7 +644,7 @@ namespace GM
             PauseBG.SetActive(true);
             Blank.SetActive(true);
             Time.timeScale = 0;
-            GameManager.getInstance().pause = false;
+            GameManager.getInstance().pause = true;
         }
 
     }
