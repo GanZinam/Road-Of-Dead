@@ -35,6 +35,8 @@ namespace GM
         public float Now_time;              // 마지막 체크 시간
         public float Now_time_w;            // 마지막 체크 시간 (웨이브)
 
+        public int whereMe = 0;             // 현재 내 위치
+
         //@ 게임 UI
         public UISlider hpBar;              // hp 스크롤 바
         public UILabel nowMyMoneyTxt;       // 현재 가지고 있는 돈 txt

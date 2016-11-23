@@ -23,4 +23,5 @@ public class Monster4 : Monster {
     {
         GM.GameManager.getInstance().v_monster4.Remove(gameObject);
     }
+
 }

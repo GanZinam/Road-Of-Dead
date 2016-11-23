@@ -7,7 +7,6 @@ namespace GM
 {
     public class MainManager : MonoBehaviour
     {
-        int whereMe = 0;                // 현재 내 위치
         public GameObject pop;          // info 팝업
 
         public Image[] images;          // 좀비들 이미지
@@ -17,6 +16,9 @@ namespace GM
 
         public Sprite[] zombieTypes;    // 좀비 타입들
         public GameObject[] rocker;
+
+        public GameObject[] Map_Canvas; // Map_Canvas 3개  0. LastTown  1. Volt 
+        public GameObject Basic_Canvas; // BasicCanvas
 
         string chatTemp = "";
         [SerializeField]
@@ -78,6 +80,8 @@ namespace GM
                     rocker[i].SetActive(false);
                 }
             }
+
+            checkMap();
             
             checkQuest();
         }
@@ -97,6 +101,22 @@ namespace GM
                     {
                         myQuestTxt[qNum].text = "좀비 처치  ( " + PlayerPrefs.GetInt("Q_0_MOSNTER_KILL") + " / 100 )"; 
                     }
+                }
+            }
+        }
+
+        void checkMap()
+        {
+            Basic_Canvas.SetActive(true);
+            for(int i = 0; i<3;i++)
+            {
+                if(GM.GameManager.getInstance().whereMe.Equals(i))
+                {
+                    Map_Canvas[i].SetActive(true);
+                }
+                else
+                {
+                    Map_Canvas[i].SetActive(false);
                 }
             }
         }
