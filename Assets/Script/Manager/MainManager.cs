@@ -102,8 +102,8 @@ namespace GM
                 // ===========================================================
             }
 
-
-            nowPos.transform.position = mapPos[PlayerPrefs.GetInt("NowMyPos")].position;
+            
+            nowPos.transform.localPosition = mapPos[PlayerPrefs.GetInt("NowMyPos")].localPosition;
 
             for (int i = 0; i < 5; i++)
             {

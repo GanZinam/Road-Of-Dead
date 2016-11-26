@@ -39,8 +39,8 @@ public class BossAnimation : MonoBehaviour
 
         StartCoroutine("eyeMove", 0);
 
-        weaponObj.SetActive(true);
-        StartCoroutine("weapon", 0);
+        //weaponObj.SetActive(true);
+        //StartCoroutine("weapon", 0);
     }
 
 
@@ -155,6 +155,7 @@ public class BossAnimation : MonoBehaviour
         if (idx.Equals(10))
         {
             // 죽음
+            Destroy(gameObject);
         }
         else
         {

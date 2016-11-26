@@ -106,6 +106,16 @@ namespace GM
         [SerializeField]
         UILabel[] end_missionTxt;
 
+        [SerializeField]
+        GameObject bossObj;
+        [SerializeField]
+        GameObject[] waveFlagsPoints;
+        [SerializeField]
+        GameObject toggle;
+
+        [SerializeField]
+        GameObject uiGameRoot;
+
         void Start()
         {
             GameManager.getInstance().pause = true;
@@ -119,6 +129,16 @@ namespace GM
             //PlayerPrefs.SetInt("Item_5", 0);
             //PlayerPrefs.SetInt("Item_6", 0);
 
+            if (PlayerPrefs.GetInt("NowMyPos").Equals(0))
+            {
+                waveFlagsPoints[0].transform.localPosition = new Vector3(-393,0); 
+                waveFlagsPoints[1].transform.localPosition = new Vector3(393, 0); 
+            }
+            else
+            {
+                waveFlagsPoints[0].transform.localPosition = new Vector3(-393, 0); 
+                waveFlagsPoints[1].transform.localPosition = new Vector3(197, 0);
+            }
 
             init();
             
@@ -310,6 +330,13 @@ namespace GM
                     waveAnim.SetTrigger("wave");
                     GameManager.getInstance().wave_start = true;
                     GameManager.getInstance().waveNum++;
+
+                    if (PlayerPrefs.GetInt("NowMyPos").Equals(1))
+                    {
+                        // 보스 소환
+                        GameObject obj = NGUITools.AddChild(uiGameRoot, bossObj) as GameObject;                     // 맵 불러오기
+
+                    }
                 }
                 else if (progressBar.value >= 1)
                 {
