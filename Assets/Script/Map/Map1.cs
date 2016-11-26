@@ -18,7 +18,7 @@ public class Map1 : MonoBehaviour {
 
 	void Update () 
     {
-        if (!GM.GameManager.getInstance().pause)
+        if (!GM.GameManager.getInstance().pause && !GM.GameManager.getInstance().isGameEnd)
         {
             GM.GameManager.getInstance().start_time += Time.deltaTime;
             //@30초 이전에 나오는 몬스터

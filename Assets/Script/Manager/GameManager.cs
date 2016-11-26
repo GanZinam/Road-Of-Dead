@@ -13,7 +13,8 @@ namespace GM
         public UI2DSprite[] itemImg;        // 게임내 가지고 갈 아이템 이미지
         public UILabel[] itemCostTxt;       // 아이템 코스트 txt
         public UILabel[] itemManyTxt;       // 아이템 개수 txt       
-        public GameObject[] item_slot;      // 아이템 슬롯 오브젝트                    
+        public GameObject[] item_slot;      // 아이템 슬롯 오브젝트
+
 
         //@ 게임 진행 
         [HideInInspector]
@@ -27,15 +28,22 @@ namespace GM
         [HideInInspector]
         public bool plzShaking = false;     // 흔들어야 될때
         public GameObject touch_screen;     // 몬스터가 붙었을때 화면을 터치하시오 txt
-
+        
+        [HideInInspector]
         public float wave1_time;            // 1번째 웨이브 시간
+        [HideInInspector]
         public float wave2_time;            // 2번째 웨이브 시간
 
+        [HideInInspector]
         public float start_time;            // 게임 시작 시간
+        [HideInInspector]
         public float Now_time;              // 마지막 체크 시간
+        [HideInInspector]
         public float Now_time_w;            // 마지막 체크 시간 (웨이브)
+        [HideInInspector]
+        public int whereMe = 1;             // 현재 내 위치
 
-        public int whereMe = 0;             // 현재 내 위치
+        public bool FIRST_START = false;            // 게임 처음인지 아닌지
 
         //@ 게임 UI
         public UISlider hpBar;              // hp 스크롤 바
@@ -46,8 +54,12 @@ namespace GM
         //@ 몬스터
         [HideInInspector]
         public int needShakeCount = 0;      // 좀비수에 따라 흔들어야 되는 수
+
         [HideInInspector]
         public int monsterKill = 0;         // 죽인 몬스터 수
+        [HideInInspector]
+        public int getMyMoney = 0;         // 벟어드린 돈 수
+
         [HideInInspector]
         public int nStickMonster = 0;       // 붙은 몬스터 수 (떼어내야될 수)
         [HideInInspector]
@@ -272,6 +284,7 @@ namespace GM
         public void getMoney(int m)
         {
             monsterKill++;  // 돈이 증가 된다 라는 것은 몬스터가 한마리 죽었다는 것
+            getMyMoney += m;
 
             if (PlayerInfo.quest.Equals(1))
             {

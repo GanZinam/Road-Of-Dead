@@ -34,9 +34,28 @@ namespace GM
         public GameObject item_use_dark;    // 아이템 사용시 어두워짐
         int item_select;                    // 아이템 몇번이 선택되어있는지
         float ppong_startTime;              // 아이템 6.아나뽕 지속시간
-        
+
+        //@ 이펙트
         [SerializeField]
-        GameObject mousePositem;            // 터치한 아이템 위치 표시해주는 오브젝트
+        GameObject BoomPositem;             // 터치한 아이템 위치 표시해주는 오브젝트
+        [SerializeField]
+        GameObject mousePositem;            // 붑바스틱
+        [SerializeField]
+        GameObject Boom;                    // 터지는 이펙트 프리펩
+        [SerializeField]
+        GameObject BoomEffectParent;        // 터지는 이펙트 부모
+
+        //@ 자동차
+        [SerializeField]
+        GameObject[] Truck_;                 // 0.기본트럭 1.노란트럭
+        [SerializeField]
+        GameObject[] Nitro_;                // 0.기본트럭 Nitro 1.노란트럭 Nitro
+        [SerializeField]
+        GameObject[] Spray_;                // 0.기본트럭 Spray 1.노란트럭 Spray
+        [SerializeField]
+        GameObject[] Car1_Tire_;            // 0.기본트럭의 기본 Tire 앞 1. 기본트럭의 기본 Tire 뒤 2. 기본트럭 좋은 Tire 앞 3. 기본트럭의 좋은 Tire 뒤
+        [SerializeField]
+        GameObject[] Car2_Tire_;            // 0.좋은트럭의 기본 Tire 앞 1. 좋은트럭의 기본 Tire 뒤 2. 좋은트럭의 좋은 Tire 앞 3. 좋은트럭의 좋은 Tire 뒤
 
         //@ 포지션
         Vector2 touchPos;                   // 내가 터치한 위치
@@ -80,20 +99,29 @@ namespace GM
         [SerializeField]
         GameObject gunShootPos;
 
+        [SerializeField]
+        UILabel[] end_killMonsterTxt;
+        [SerializeField]
+        UILabel[] end_getMoneyTxt;
+        [SerializeField]
+        UILabel[] end_missionTxt;
+
         void Start()
         {
-            PlayerPrefs.SetInt("Money", 10000);
-            PlayerPrefs.SetInt("Item_0", 0);
-            PlayerPrefs.SetInt("Item_1", 0);
-            PlayerPrefs.SetInt("Item_2", 0);
-            PlayerPrefs.SetInt("Item_3", 0);
-            PlayerPrefs.SetInt("Item_4", 0);
-            PlayerPrefs.SetInt("Item_5", 0);
-            PlayerPrefs.SetInt("Item_6", 0);
-
-
             GameManager.getInstance().pause = true;
+
+            //PlayerPrefs.SetInt("Money", 10000);
+            //PlayerPrefs.SetInt("Item_0", 0);
+            //PlayerPrefs.SetInt("Item_1", 0);
+            //PlayerPrefs.SetInt("Item_2", 0);
+            //PlayerPrefs.SetInt("Item_3", 0);
+            //PlayerPrefs.SetInt("Item_4", 0);
+            //PlayerPrefs.SetInt("Item_5", 0);
+            //PlayerPrefs.SetInt("Item_6", 0);
+
+
             init();
+            
         }
 
         /**
@@ -102,8 +130,82 @@ namespace GM
         public void init()
         {
             GameManager.getInstance().init();
-            GameObject obj = NGUITools.AddChild(null, map[PlayerInfo.loadNum]) as GameObject;      //맵 불러오기
-            Bullet_DelayTime = 0.05f;
+            GameObject obj = NGUITools.AddChild(null, map[PlayerInfo.loadNum]) as GameObject;                     // 맵 불러오기
+
+            
+            //@ 차 불러오기
+            for (int i = 0; i < 2; i++)
+            {
+                if (PlayerPrefs.GetInt(string.Format("Car_{0}", i)).Equals(1))
+                {
+                    Truck_[i].SetActive(true);
+                    if (i.Equals(0))            // 기본트럭일시
+                    {
+                        for (int j = 0; j < 2; j++)
+                        {
+                            if (PlayerPrefs.GetInt(string.Format("Tire_{0}", j)).Equals(1))
+                            {
+                                Car1_Tire_[0].SetActive(true);
+                                Car1_Tire_[1].SetActive(true);
+                                Car1_Tire_[2].SetActive(false);
+                                Car1_Tire_[3].SetActive(false);
+                            }
+                            if (PlayerPrefs.GetInt(string.Format("Nitro_{0}", j)).Equals(1))
+                            {
+                                Nitro_[i].SetActive(true);
+                            }
+                            else
+                            {
+                                Nitro_[i].SetActive(false);
+                            }
+                            if (PlayerPrefs.GetInt(string.Format("Spray_{0}", j)).Equals(1))
+                            {
+                                Spray_[i].SetActive(true);
+                            }
+                            else
+                            {
+                                Spray_[i].SetActive(false);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (int j = 0; j < 2; j++)
+                        {
+                            if (PlayerPrefs.GetInt(string.Format("Tire_{0}", j)).Equals(1))
+                            {
+                                Car2_Tire_[0].SetActive(true);
+                                Car2_Tire_[1].SetActive(true);
+                                Car2_Tire_[2].SetActive(false);
+                                Car2_Tire_[3].SetActive(false);
+                            }
+                            if (PlayerPrefs.GetInt(string.Format("Nitro_{0}", j)).Equals(1))
+                            {
+                                Nitro_[i].SetActive(true);
+                            }
+                            else
+                            {
+                                Nitro_[i].SetActive(false);
+                            }
+                            if (PlayerPrefs.GetInt(string.Format("Spray_{0}", j)).Equals(1))
+                            {
+                                Spray_[i].SetActive(true);
+                            }
+                            else
+                            {
+                                Spray_[i].SetActive(false);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    Truck_[i].SetActive(false);
+                }
+            }
+
+
+            Bullet_DelayTime = 0.05f;               // 총알 속도
         }
 
 
@@ -112,6 +214,7 @@ namespace GM
             if (!GameManager.getInstance().pause && Time.timeScale.Equals(1))
             {
                 Tier.GetComponent<Animator>().Play("GO");           // 타이어 애니메이션 실행
+
                 
                 #region _SHOOT_BULLET_
     
@@ -136,6 +239,7 @@ namespace GM
                             item_finish = true;
 
                             mousePositem.SetActive(true);
+                            BoomPositem.SetActive(true);
                             mousePositem.transform.localPosition = touchPos - new Vector2(640, 360);
 
                         }
@@ -161,6 +265,7 @@ namespace GM
                     {
                         mousePosObj.SetActive(false);
                         mousePositem.SetActive(false);
+                        BoomPositem.SetActive(false);
                     }
                 }
                 else if (Input.GetMouseButtonUp(0))
@@ -171,7 +276,10 @@ namespace GM
                         GameManager.getInstance().cheak_Monster();
                         item_finish = false;
                         item_use_dark.SetActive(false);
-                        mousePositem.SetActive(false);
+                        BoomPositem.SetActive(false);
+
+                        Debug.Log("Boom");
+                        GameObject obj = NGUITools.AddChild(BoomEffectParent, Boom) as GameObject;  // 이펙트 생성
                         for (int i = 0; i < 4; i++)
                         {
                             if (push_item[i])
@@ -435,6 +543,14 @@ namespace GM
         {
             GameManager.getInstance().isGameEnd = true;
             Blank.SetActive(true);
+
+            for (int i = 0; i < 2; i++)
+            {
+                end_killMonsterTxt[i].text = GameManager.getInstance().monsterKill + "";
+                end_getMoneyTxt[i].text = GameManager.getInstance().getMyMoney + "";
+                end_missionTxt[i].text = "";
+            }
+
             if (isClear)
             {
                 resultAnim.SetTrigger("Success"); // 성공

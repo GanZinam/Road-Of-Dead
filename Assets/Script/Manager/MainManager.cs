@@ -7,18 +7,26 @@ namespace GM
 {
     public class MainManager : MonoBehaviour
     {
-        public GameObject pop;          // info 팝업
+        public GameObject pop;              // info 팝업
 
-        public Image[] images;          // 좀비들 이미지
-        public Text mapTxt;             // 맵 이름
-        public Text questTxt;           // 퀘스트 내용
-        public Text chatTxt;            // 채팅 내용
+        public Image[] images;              // 좀비들 이미지
+        public Text mapTxt;                 // 맵 이름
+        public Text questTxt;               // 퀘스트 내용
+        public Text chatTxt;                // 채팅 내용
 
-        public Sprite[] zombieTypes;    // 좀비 타입들
+        public Sprite[] zombieTypes;        // 좀비 타입들
         public GameObject[] rocker;
 
-        public GameObject[] Map_Canvas; // Map_Canvas 3개  0. LastTown  1. Volt 
-        public GameObject Basic_Canvas; // BasicCanvas
+        public GameObject[] Map_Canvas;     // Map_Canvas 3개  0. LastTown  1. Volt 
+        public GameObject Basic_Canvas;     // BasicCanvas
+
+        public GameObject[] custom_Type;    // 0. Netro 1. Spray 2. Car 3. Tire
+        public Sprite[] Netro_onj;          // 0. None 1. Netro
+        public Sprite[] Spray_onj;          // 0. None 1. Spray(Star)
+        public Sprite[] Car_onj;            // 0. normal 1. normal(yellow)
+        public Sprite[] Tire_onj;           // 0. normal 1. Big
+
+        public Image[] Car_Obj;        // 차가 가지고있는 것들
 
         string chatTemp = "";
         [SerializeField]
@@ -44,31 +52,55 @@ namespace GM
         [SerializeField]
         Transform[] mapPos;
 
+
+
+
         void Start()
         {
-            // 데이터 (추후 삭제)
-            PlayerPrefs.SetInt("NowMyPos", 0);
-            
-            PlayerPrefs.SetInt("Map_0", 1);
-            PlayerPrefs.SetInt("Map_1", 1);
-            PlayerPrefs.SetInt("Map_2", 0);
-            PlayerPrefs.SetInt("Map_3", 0);
-            PlayerPrefs.SetInt("Map_4", 0);
+            if (!GM.GameManager.getInstance().FIRST_START)
+            {
+                // 데이터 (추후 삭제)
+                PlayerPrefs.SetInt("NowMyPos", 1);
 
-            PlayerPrefs.SetInt("Q_0_IS", 0);
-            PlayerPrefs.SetInt("Q_0_MONSTER_KILL", 0);
+                PlayerPrefs.SetInt("Map_0", 1);
+                PlayerPrefs.SetInt("Map_1", 1);
+                PlayerPrefs.SetInt("Map_2", 0);
+                PlayerPrefs.SetInt("Map_3", 0);
+                PlayerPrefs.SetInt("Map_4", 0);
 
-            PlayerPrefs.SetInt("Money", 10000);
-            PlayerPrefs.SetInt("Item_0", 0);
-            PlayerPrefs.SetInt("Item_1", 0);
-            PlayerPrefs.SetInt("Item_2", 0);
-            PlayerPrefs.SetInt("Item_3", 0);
-            PlayerPrefs.SetInt("Item_4", 0);
-            PlayerPrefs.SetInt("Item_5", 0);
-            PlayerPrefs.SetInt("Item_6", 0);
+                PlayerPrefs.SetInt("Q_0_IS", 0);
+                PlayerPrefs.SetInt("Q_0_MONSTER_KILL", 0);
 
-            // ===========================================================
+                PlayerPrefs.SetInt("Money", 10000);
+                PlayerPrefs.SetInt("Item_0", 0);
+                PlayerPrefs.SetInt("Item_1", 0);
+                PlayerPrefs.SetInt("Item_2", 0);
+                PlayerPrefs.SetInt("Item_3", 0);
+                PlayerPrefs.SetInt("Item_4", 0);
+                PlayerPrefs.SetInt("Item_5", 0);
+                PlayerPrefs.SetInt("Item_6", 0);
+                GM.GameManager.getInstance().whereMe = 1;
 
+                for (int j = 0; j < 4; j++)
+                {
+                    if (j.Equals(0))
+                    {
+                        PlayerPrefs.SetInt(string.Format("Spray_{0}", j), 1);
+                        PlayerPrefs.SetInt(string.Format("Tire_{0}", j), 1);
+                        PlayerPrefs.SetInt(string.Format("Car_{0}", j), 1);
+                        PlayerPrefs.SetInt(string.Format("Nitro_{0}", j), 1);
+                    }
+                    else
+                    {
+                        PlayerPrefs.SetInt(string.Format("Spray_{0}", j), 0);
+                        PlayerPrefs.SetInt(string.Format("Tire_{0}", j), 0);
+                        PlayerPrefs.SetInt(string.Format("Car_{0}", j), 0);
+                        PlayerPrefs.SetInt(string.Format("Nitro_{0}", j), 0);
+                    }
+                }
+                GM.GameManager.getInstance().FIRST_START = true;
+                // ===========================================================
+            }
 
 
             nowPos.transform.position = mapPos[PlayerPrefs.GetInt("NowMyPos")].position;
@@ -120,6 +152,29 @@ namespace GM
                 }
             }
         }
+        
+        public void CustomCheck()
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                if(PlayerPrefs.GetInt(string.Format("Nitro_{0}", i)).Equals(1))
+                {
+                    Car_Obj[0].sprite = Netro_onj[i];
+                }
+                if (PlayerPrefs.GetInt(string.Format("Spray_{0}", i)).Equals(1))
+                {
+                    Car_Obj[1].sprite = Spray_onj[i];
+                }
+                if (PlayerPrefs.GetInt(string.Format("Car_{0}", i)).Equals(1))
+                {
+                    Car_Obj[2].sprite = Car_onj[i];
+                }
+                if (PlayerPrefs.GetInt(string.Format("Tire_{0}", i)).Equals(1))
+                {
+                    Car_Obj[3].sprite = Tire_onj[i];
+                }
+            }
+        }
 
         /**
          * @brief : 맵 
@@ -162,32 +217,53 @@ namespace GM
             Application.LoadLevel("InGameScene");
         }
 
+        /**
+         * @brief : Nitro 선택
+         * @param i : 몇번째 Nitro인지
+         */
         public void Nitro(int i)
         {
             for (int j = 0; j < 4; j++)
                 PlayerPrefs.SetInt(string.Format("Nitro_{0}", j), 0);
-            PlayerPrefs.SetInt(string.Format("Nitro_{0},i"), 1);
-        }
+            PlayerPrefs.SetInt(string.Format("Nitro_{0}", i), 1);
+            Car_Obj[0].sprite = Netro_onj[i];
+            //Car_Obj[0].sprite = Resources.Load<Sprite>("Nitro"+i)as Sprite;
 
-        public void Engine(int i)
+        }
+        /**
+         * @brief : Spray 선택
+         * @param i : 몇번째 Spray인지
+         */
+        public void Spray(int i)
         {
             for (int j = 0; j < 4; j++)
-                PlayerPrefs.SetInt(string.Format("Engine_{0}", j), 0);
-            PlayerPrefs.SetInt(string.Format("Engine_{0},i"), 1);
+                PlayerPrefs.SetInt(string.Format("Spray_{0}", j), 0);
+            PlayerPrefs.SetInt(string.Format("Spray_{0}", i), 1);
+            Car_Obj[1].sprite = Spray_onj[i];
         }
-
+        /**
+         * @brief : Car 선택
+         * @param i : 몇번째 Car인지
+         */
         public void Car(int i)
         {
             for (int j = 0; j < 4; j++)
                 PlayerPrefs.SetInt(string.Format("Car_{0}", j), 0);
-            PlayerPrefs.SetInt(string.Format("Car_{0},i"), 1);
-        }
+            PlayerPrefs.SetInt(string.Format("Car_{0}", i), 1);
 
+            Car_Obj[2].sprite = Car_onj[i];
+        }
+        /**
+         * @brief : Tire 선택
+         * @param i : 몇번째 Tire인지
+         */
         public void Tire(int i)
         {
             for (int j = 0; j < 4; j++)
                 PlayerPrefs.SetInt(string.Format("Tire_{0}", j), 0);
-            PlayerPrefs.SetInt(string.Format("Tire_{0},i"), 1);
+            PlayerPrefs.SetInt(string.Format("Tire_{0}", i), 1);
+
+            Car_Obj[3].sprite = Tire_onj[i];
         }
 
 

@@ -33,7 +33,6 @@ public class Monster : MonoBehaviour
                 GM.GameManager.getInstance().nStickMonster -= 1;
                 GM.GameManager.getInstance().Shaking_check();
             }
-            GM.GameManager.getInstance().getMoney(100);
             dead = true;
             
         }
@@ -59,7 +58,9 @@ public class Monster : MonoBehaviour
         {
             deadAnimation();    
         }
-        StartCoroutine(update());
+
+        if (!GM.GameManager.getInstance().isGameEnd)
+            StartCoroutine(update());
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -137,6 +138,7 @@ public class Monster : MonoBehaviour
      */
     public void deadAnimation()
     {
+        GM.GameManager.getInstance().getMoney(100);
         gameObject.GetComponent<TweenAlpha>().enabled = true;       // Tween Alpha start
         ani = true;
     }
