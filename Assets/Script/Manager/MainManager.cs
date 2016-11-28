@@ -15,7 +15,6 @@ namespace GM
         public Text chatTxt;                // 채팅 내용
 
         public Sprite[] zombieTypes;        // 좀비 타입들
-        public GameObject[] rocker;
 
         public GameObject[] Map_Canvas;     // Map_Canvas 3개  0. LastTown  1. Volt 
         public GameObject Basic_Canvas;     // BasicCanvas
@@ -26,7 +25,10 @@ namespace GM
         public Sprite[] Car_onj;            // 0. normal 1. normal(yellow)
         public Sprite[] Tire_onj;           // 0. normal 1. Big
 
-        public Image[] Car_Obj;        // 차가 가지고있는 것들
+        public Image[] Car_Obj;             // 차가 가지고있는 것들
+
+        public GameObject[] Map_BT;         // 0. LastTown 1. Volt 2. Beretta 3. None 4. None
+        public GameObject[] Map_Close_BT;   // 0. LastTown 1. Volt 2. Beretta 3. None 4. None
 
         string chatTemp = "";
         [SerializeField]
@@ -55,67 +57,35 @@ namespace GM
 
 
 
+
         void Start()
         {
-            if (!GM.GameManager.getInstance().FIRST_START)
-            {
-                // 데이터 (추후 삭제)
-                PlayerPrefs.SetInt("NowMyPos", 0);
-
-                PlayerPrefs.SetInt("Map_0", 1);
-                PlayerPrefs.SetInt("Map_1", 1);
-                PlayerPrefs.SetInt("Map_2", 0);
-                PlayerPrefs.SetInt("Map_3", 0);
-                PlayerPrefs.SetInt("Map_4", 0);
-
-                PlayerPrefs.SetInt("Q_0_IS", 0);
-                PlayerPrefs.SetInt("Q_0_MONSTER_KILL", 0);
-
-                PlayerPrefs.SetInt("Money", 10000);
-                PlayerPrefs.SetInt("Item_0", 0);
-                PlayerPrefs.SetInt("Item_1", 0);
-                PlayerPrefs.SetInt("Item_2", 0);
-                PlayerPrefs.SetInt("Item_3", 0);
-                PlayerPrefs.SetInt("Item_4", 0);
-                PlayerPrefs.SetInt("Item_5", 0);
-                PlayerPrefs.SetInt("Item_6", 0);
-
-                for (int j = 0; j < 4; j++)
-                {
-                    if (j.Equals(0))
-                    {
-                        PlayerPrefs.SetInt(string.Format("Spray_{0}", j), 1);
-                        PlayerPrefs.SetInt(string.Format("Tire_{0}", j), 1);
-                        PlayerPrefs.SetInt(string.Format("Car_{0}", j), 1);
-                        PlayerPrefs.SetInt(string.Format("Nitro_{0}", j), 1);
-                    }
-                    else
-                    {
-                        PlayerPrefs.SetInt(string.Format("Spray_{0}", j), 0);
-                        PlayerPrefs.SetInt(string.Format("Tire_{0}", j), 0);
-                        PlayerPrefs.SetInt(string.Format("Car_{0}", j), 0);
-                        PlayerPrefs.SetInt(string.Format("Nitro_{0}", j), 0);
-                    }
-                }
-                GM.GameManager.getInstance().FIRST_START = true;
-                // ===========================================================
-            }
-
-            
             nowPos.transform.localPosition = mapPos[PlayerPrefs.GetInt("NowMyPos")].localPosition;
 
-            for (int i = 0; i < 5; i++)
-            {
-                if (PlayerPrefs.GetInt(string.Format("Map_{0}", i)).Equals(1))
-                {
-                    rocker[i].SetActive(false);
-                }
-            }
 
             checkMap();
             
             checkQuest();
         }
+
+        public void CheckWorldMap()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                if(PlayerPrefs.GetInt(string.Format("Map_{0}", i )).Equals(1))
+                {
+                    Map_Close_BT[i].SetActive(false);
+                    Map_BT[i].SetActive(true);
+                }
+                else
+                {
+                    Map_Close_BT[i].SetActive(true);
+                    Map_BT[i].SetActive(false);
+                }
+                
+            }
+        }
+
 
         void checkQuest()
         {
@@ -138,12 +108,12 @@ namespace GM
 
         void checkMap()
         {
+            Debug.Log(PlayerPrefs.GetInt("NowMyPos"));
             Basic_Canvas.SetActive(true);
             for(int i = 0; i<3;i++)
             {
                 if (PlayerPrefs.GetInt("NowMyPos").Equals(i))
                 {
-                    Debug.Log(PlayerPrefs.GetInt("NowMyPos"));
                     Map_Canvas[i].SetActive(true);
                 }
                 else
@@ -182,21 +152,24 @@ namespace GM
          */
         public void mapBT(int i)
         {
-            PlayerInfo.loadNum = i;
-            Debug.Log("next_map_num : " + PlayerInfo.loadNum);
-            mapTxt.text = "";
-            if (PlayerInfo.quest.Equals(1))
+            if (i != PlayerPrefs.GetInt("NowMyPos"))
             {
-                questTxt.text = "좀비 100마리 처치!";
+                PlayerInfo.loadNum = i;
+                Debug.Log("next_map_num : " + PlayerInfo.loadNum);
+                mapTxt.text = "";
+                if (PlayerInfo.quest.Equals(1))
+                {
+                    questTxt.text = "좀비 100마리 처치!";
+                }
+                chatTxt.text = "";
+
+                images[0].sprite = zombieTypes[0];
+                images[1].sprite = zombieTypes[1];
+                images[2].sprite = zombieTypes[2];
+                images[3].sprite = zombieTypes[3];
+
+                pop.SetActive(true);
             }
-            chatTxt.text = "";
-
-            images[0].sprite = zombieTypes[0];
-            images[1].sprite = zombieTypes[1];
-            images[2].sprite = zombieTypes[2];
-            images[3].sprite = zombieTypes[3];
-
-            pop.SetActive(true);
         }
 
         /**
@@ -205,6 +178,14 @@ namespace GM
         public void popExitBT()
         {
             pop.SetActive(false);
+        }
+
+        /**
+         * @brief : 뒤로 가기
+         */
+        public void BackBT()
+        {
+            checkMap();
         }
 
         /**

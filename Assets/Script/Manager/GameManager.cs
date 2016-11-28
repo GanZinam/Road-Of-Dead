@@ -8,7 +8,7 @@ namespace GM
     {
         //@ 아이템
         [HideInInspector]
-        public int[] itemNum = new int[2];  // 게임내 가지고 갈 아이템
+        //public int[] itemNum = new int[2];  // 게임내 가지고 갈 아이템
         public UILabel[] itemTxt;           // 게임내 가지고 갈 아이템 개수 txt
         public UI2DSprite[] itemImg;        // 게임내 가지고 갈 아이템 이미지
         public UILabel[] itemCostTxt;       // 아이템 코스트 txt
@@ -101,6 +101,8 @@ namespace GM
 
         public ITEM[] myItem = new ITEM[2];
 
+        public GameObject boss;
+
         // 싱글
         private static GameManager instance;
         public static GameManager getInstance()
@@ -150,8 +152,8 @@ namespace GM
             }
 
             //@ 아이템 초기화
-            itemNum[0] = 10;
-            itemNum[1] = 4;
+            //itemNum[0] = 0;
+            //itemNum[1] = 0;
 
             itemTxt[0].text = "";
             itemTxt[1].text = "";
@@ -224,6 +226,11 @@ namespace GM
                 needShakeCount = 0;
                 nStickMonster = 0;
                 Reload = false;
+            }
+
+            if (boss != null)
+            {
+                boss.SendMessage("boom_item_die");
             }
         }
         /**
@@ -317,8 +324,11 @@ namespace GM
             {
                 if (idx.Equals(string.Format("Item_{0}",j)))
                 {
-                    inputItemSlotTxt(i, j);
-                    break;
+                    if ((!myItem[0].type.Equals(j)) && (!myItem[1].type.Equals(j)))
+                    {
+                        inputItemSlotTxt(i, j);
+                        break;
+                    }
                 }
             }
         }

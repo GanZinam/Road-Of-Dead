@@ -120,15 +120,6 @@ namespace GM
         {
             GameManager.getInstance().pause = true;
 
-            //PlayerPrefs.SetInt("Money", 10000);
-            //PlayerPrefs.SetInt("Item_0", 0);
-            //PlayerPrefs.SetInt("Item_1", 0);
-            //PlayerPrefs.SetInt("Item_2", 0);
-            //PlayerPrefs.SetInt("Item_3", 0);
-            //PlayerPrefs.SetInt("Item_4", 0);
-            //PlayerPrefs.SetInt("Item_5", 0);
-            //PlayerPrefs.SetInt("Item_6", 0);
-
             if (PlayerPrefs.GetInt("NowMyPos").Equals(0))
             {
                 waveFlagsPoints[0].transform.localPosition = new Vector3(-393,0); 
@@ -300,6 +291,7 @@ namespace GM
 
                         Debug.Log("Boom");
                         GameObject obj = NGUITools.AddChild(BoomEffectParent, Boom) as GameObject;  // 이펙트 생성
+                        obj.GetComponent<UI2DSprite>().depth = 400;
                         for (int i = 0; i < 4; i++)
                         {
                             if (push_item[i])
@@ -335,14 +327,30 @@ namespace GM
                     {
                         // 보스 소환
                         GameObject obj = NGUITools.AddChild(uiGameRoot, bossObj) as GameObject;                     // 맵 불러오기
-
+                        GameManager.getInstance().boss = obj;
                     }
                 }
                 // 게임 성공 (종료)
-                else if (progressBar.value >= 1)
+                else if (progressBar.value >= 1 && !PlayerPrefs.GetInt("NowMyPos").Equals(1))
                 {
-                    Debug.Log(PlayerInfo.loadNum);
                     PlayerPrefs.SetInt("NowMyPos", PlayerInfo.loadNum);
+
+                    if (PlayerInfo.loadNum.Equals(0))
+                    {
+                        PlayerPrefs.SetInt("Map_1", 1);
+                    }
+                    else if (PlayerInfo.loadNum.Equals(1))
+                    {
+                        PlayerPrefs.SetInt("Map_2", 1);
+                    }
+                    else if (PlayerInfo.loadNum.Equals(2))
+                    {
+                        PlayerPrefs.SetInt("Map_3", 1);
+                    }
+                    else if (PlayerInfo.loadNum.Equals(3))
+                    {
+                        PlayerPrefs.SetInt("Map_4", 1);
+                    }
                     gameEnd(true);  
                 }
 
