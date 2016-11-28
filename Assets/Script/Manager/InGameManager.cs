@@ -34,6 +34,8 @@ namespace GM
         public GameObject item_use_dark;    // 아이템 사용시 어두워짐
         int item_select;                    // 아이템 몇번이 선택되어있는지
         float ppong_startTime;              // 아이템 6.아나뽕 지속시간
+        public GameObject AnaPPongBG;       // 
+        public GameObject AnaHead;
 
         //@ 이펙트
         [SerializeField]
@@ -226,6 +228,8 @@ namespace GM
             {
                 Tier.GetComponent<Animator>().Play("GO");           // 타이어 애니메이션 실행
 
+
+                GM.GameManager.getInstance().Shaking_check();
                 
                 #region _SHOOT_BULLET_
     
@@ -326,6 +330,7 @@ namespace GM
                     if (PlayerPrefs.GetInt("NowMyPos").Equals(1))
                     {
                         // 보스 소환
+                        GM.GameManager.getInstance().BossDeath = false;
                         GameObject obj = NGUITools.AddChild(uiGameRoot, bossObj) as GameObject;                     // 맵 불러오기
                         GameManager.getInstance().boss = obj;
                     }
@@ -352,6 +357,31 @@ namespace GM
                         PlayerPrefs.SetInt("Map_4", 1);
                     }
                     gameEnd(true);  
+                }
+                else if (GM.GameManager.getInstance().waveNum.Equals(2) && PlayerPrefs.GetInt("NowMyPos").Equals(1))
+                {
+                    if (GM.GameManager.getInstance().BossDeath.Equals(true))
+                    {
+                        PlayerPrefs.SetInt("NowMyPos", PlayerInfo.loadNum);
+
+                        if (PlayerInfo.loadNum.Equals(0))
+                        {
+                            PlayerPrefs.SetInt("Map_1", 1);
+                        }
+                        else if (PlayerInfo.loadNum.Equals(1))
+                        {
+                            PlayerPrefs.SetInt("Map_2", 1);
+                        }
+                        else if (PlayerInfo.loadNum.Equals(2))
+                        {
+                            PlayerPrefs.SetInt("Map_3", 1);
+                        }
+                        else if (PlayerInfo.loadNum.Equals(3))
+                        {
+                            PlayerPrefs.SetInt("Map_4", 1);
+                        }
+                        gameEnd(true);
+                    }
                 }
 
                 // 게임 실패 (종료)
@@ -387,8 +417,18 @@ namespace GM
                     Bullet_DelayTime = 0.05f;
                     GM.GameManager.getInstance().Bullet_Damege = 20;
                     item_exit(6);
+                    AnaPPongBG.SetActive(false);
+                    AnaHead.SetActive(false);
+                    GameManager.getInstance().item_slot[item_select].GetComponent<UI2DSprite>().color = Color.white;
+
                 }
             }
+            if (bossObj != null && Input.GetKey("space"))
+            {
+                GM.GameManager.getInstance().Bullet_Damege = 99999999;
+            }
+
+
         }
 
         /**
@@ -782,8 +822,13 @@ namespace GM
             if (!GameManager.getInstance().pause)
             {
                 item_intro(6);
+                AnaPPongBG.SetActive(true);
+                AnaHead.SetActive(true);
                 Bullet_DelayTime = 0.03f;
                 GM.GameManager.getInstance().Bullet_Damege = 50;
+                GameManager.getInstance().item_slot[item_select].GetComponent<UI2DSprite>().color = Color.red;
+
+                GameManager.getInstance().inputItemSlotTxt(item_select, GameManager.getInstance().myItem[item_select].type);
             }
         }
 

@@ -77,6 +77,8 @@ namespace GM
         [SerializeField]
         GameObject monsterParent;           // 몬스터 부모
 
+        public bool BossDeath;              // 보스 죽엇는지
+
         //@ 총알
         [HideInInspector]
         public bool Reload = false;         // 총 장전중인지 아닌지
@@ -141,6 +143,7 @@ namespace GM
             monsterKill = 0;
             nStickMonster = 0;
             start_time = 0;
+            BossDeath = true;
 
 
             nowMyMoneyTxt.text = PlayerPrefs.GetInt("Money") + "";
@@ -233,6 +236,7 @@ namespace GM
                 boss.SendMessage("boom_item_die");
             }
         }
+
         /**
         * @brief : 폭탄 아이템 안에 들어와있는 몬스터 죽이기
         */

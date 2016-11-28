@@ -9,7 +9,7 @@ public class IntroManager : MonoBehaviour {
         if (!GM.GameManager.getInstance().FIRST_START)
         {
             // 데이터 (추후 삭제)
-            PlayerPrefs.SetInt("NowMyPos", 0);
+            PlayerPrefs.SetInt("NowMyPos", 1);
 
             PlayerPrefs.SetInt("Map_0", 1);
             PlayerPrefs.SetInt("Map_1", 1);

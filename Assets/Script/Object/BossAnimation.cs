@@ -41,9 +41,9 @@ public class BossAnimation : MonoBehaviour
         UpDownTime = 0;
         limitTime = Random.Range(1f, 3f);
 
-        transform.localPosition = new Vector3(-820, -150);
+        transform.localPosition = new Vector3(-820, -100);
 
-        weaponObj.transform.localPosition = new Vector3(-360, 140);
+        weaponObj.transform.localPosition = new Vector3(-130, 83);
         weaponObj.SetActive(false);
 
         if (Random.Range(0, 2).Equals(0))
@@ -55,6 +55,7 @@ public class BossAnimation : MonoBehaviour
         bossAnim = GetComponent<UI2DSprite>();
 
         StartCoroutine("eyeMove", 0);
+        StartCoroutine("attackPattern",0);
 
     }
 
@@ -66,7 +67,7 @@ public class BossAnimation : MonoBehaviour
             if (canMove)
             {
                 transform.position += new Vector3(moveSpeed * Time.deltaTime, 0);
-                if (transform.localPosition.x >= 200)
+                if (transform.localPosition.x >= 220)
                 {
                     isAttacking = true;
                     StopCoroutine("eyeMove");
@@ -77,7 +78,7 @@ public class BossAnimation : MonoBehaviour
             }
             else
             {
-                transform.position -= new Vector3(1 * Time.deltaTime, 0);
+                transform.position -= new Vector3(1.2f * Time.deltaTime, 0);
                 if (transform.localPosition.x <= -100)
                 {
                     canMove = true;
@@ -89,21 +90,29 @@ public class BossAnimation : MonoBehaviour
             if (isUpDown)
             {
                 transform.position += new Vector3(0, 0.1f * Time.deltaTime);
-                if (transform.localPosition.y >= -80)
+                if (transform.localPosition.y >= -130)
+                {
+                    UpDownTime = 0;
+                    limitTime = Random.Range(1.0f, 5.0f);
                     isUpDown = false;
+                }
             }
             else
             {
                 transform.position -= new Vector3(0, 0.1f * Time.deltaTime);
 
-                if (transform.localPosition.y <= -220)
+                if (transform.localPosition.y <= -250)
+                {
+                    UpDownTime = 0;
+                    limitTime = Random.Range(1.0f, 5.0f);
                     isUpDown = true;
+                }
             }
 
             if (UpDownTime >= limitTime)
             {
                 UpDownTime = 0;
-                limitTime = Random.Range(1f, 3f);
+                limitTime = Random.Range(2.0f, 6.0f);
 
                 if (isUpDown)
                     isUpDown = false;
@@ -159,7 +168,11 @@ public class BossAnimation : MonoBehaviour
         {
             bossAnim.sprite2D = attackAnimation[idx];
 
-            StartCoroutine("attack", ++idx);
+            StartCoroutine("attack", ++idx); 
+            if (idx.Equals(9))
+            {
+                GM.GameManager.getInstance().hpBar.value -= 0.2f;
+            }
         }
     }
 
@@ -171,6 +184,7 @@ public class BossAnimation : MonoBehaviour
         {
             // 죽음
             Destroy(gameObject);
+            GM.GameManager.getInstance().BossDeath = true;
             GM.GameManager.getInstance().boss = null;
         }
         else
@@ -191,18 +205,36 @@ public class BossAnimation : MonoBehaviour
         if (idx.Equals(0))
         {
             // 일반 좀비 4명 소환
+            for (int i = 0; i < 4; i++)
+            {
+                GM.GameManager.getInstance().Monster_1_creat();
+            }
         }
         else if (idx.Equals(1))
         {
             // 체력 좀비 3마리 소환
+
+            for (int i = 0; i < 3; i++)
+            {
+                GM.GameManager.getInstance().Monster_3_creat();
+            }
         }
         else if (idx.Equals(2))
         {
             // 공격 좀비 3마리 소환
+            for (int i = 0; i < 3; i++)
+            {
+                GM.GameManager.getInstance().Monster_2_creat();
+            }
         }
         else
         {
             // 밸런스 좀비 2마리 소환
+
+            for (int i = 0; i < 2; i++)
+            {
+                GM.GameManager.getInstance().Monster_4_creat();
+            }
         }
 
         StartCoroutine("attackPattern", ++idx);
@@ -236,7 +268,7 @@ public class BossAnimation : MonoBehaviour
                 gameObject.transform.localPosition.y + other.gameObject.transform.localPosition.y + 200 >= 300)
             {
                 // 추가 데미지
-                hp -= 100000;
+                hp -= 10000;
             }
 
             // 총알이 충돌됬을시 지우지 않고 안보이는 곳으로 이동시킨후 다시 사용

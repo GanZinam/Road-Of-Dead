@@ -13,6 +13,7 @@ namespace GM
         public Text mapTxt;                 // 맵 이름
         public Text questTxt;               // 퀘스트 내용
         public Text chatTxt;                // 채팅 내용
+        public GameObject CustomBT;        // 커스텀 버튼
 
         public Sprite[] zombieTypes;        // 좀비 타입들
 
@@ -24,6 +25,11 @@ namespace GM
         public Sprite[] Spray_onj;          // 0. None 1. Spray(Star)
         public Sprite[] Car_onj;            // 0. normal 1. normal(yellow)
         public Sprite[] Tire_onj;           // 0. normal 1. Big
+
+        public GameObject[] Car_Custom;     
+        public GameObject[] Car_Netro;
+        public GameObject[] Car_Spray;
+        public GameObject[] Car_Tire;
 
         public Image[] Car_Obj;             // 차가 가지고있는 것들
 
@@ -66,6 +72,9 @@ namespace GM
             checkMap();
             
             checkQuest();
+
+            checkCar();
+
         }
 
         public void CheckWorldMap()
@@ -119,6 +128,63 @@ namespace GM
                 else
                 {
                     Map_Canvas[i].SetActive(false);
+                }
+            }
+        }
+
+        void checkCar()
+        {
+            Car_Custom[0].SetActive(false);
+            Car_Custom[1].SetActive(false);
+            Car_Tire[0].SetActive(false);
+            Car_Tire[1].SetActive(false);
+            Car_Tire[2].SetActive(false);
+            Car_Tire[3].SetActive(false);
+
+            for (int i = 0; i < 4; i++)
+            {
+                if (PlayerPrefs.GetInt(string.Format("Nitro_{0}", i)).Equals(1))
+                {
+                    if (i.Equals(1))
+                    {
+                        Car_Netro[0].SetActive(true);
+                        Car_Netro[1].SetActive(true);
+                    }
+                    else 
+                    {
+                        Car_Netro[0].SetActive(false);
+                        Car_Netro[1].SetActive(false);
+                    }
+                }
+                if (PlayerPrefs.GetInt(string.Format("Spray_{0}", i)).Equals(1))
+                {
+                    if (i.Equals(1))
+                    {
+                        Car_Spray[0].SetActive(true);
+                        Car_Spray[1].SetActive(true);
+                    }
+                    else
+                    {
+                        Car_Spray[0].SetActive(false);
+                        Car_Spray[1].SetActive(false);
+                    }
+                }
+                if (PlayerPrefs.GetInt(string.Format("Car_{0}", i)).Equals(1))
+                {
+                    Car_Custom[i].SetActive(true);
+                }
+                if (PlayerPrefs.GetInt(string.Format("Tire_{0}", i)).Equals(1))
+                {
+                    if(i.Equals(1))
+                    {
+                        Car_Tire[1].SetActive(true);
+                        Car_Tire[3].SetActive(true);
+                    }
+                    else if(i.Equals(0))
+                    {
+                        Car_Tire[0].SetActive(true);
+                        Car_Tire[2].SetActive(true);
+                    }
                 }
             }
         }
@@ -305,7 +371,8 @@ namespace GM
             }
         }
 
-        bool isRed = false;
+        bool isRed = false; 
+        bool isGreen = false;
         bool isChatFinish = false;
 
         /**
@@ -328,14 +395,29 @@ namespace GM
                 }
                 else if (chat[i].Equals('#'))
                     isRed = true;
+                else if (chat[i].Equals('%'))
+                    isGreen = true;
+                else if (chat[i].Equals('$'))
+                {
+                    // 수락 거절
+                    if (!isChatFinish)
+                        buttonAnim.SetTrigger("BUTTON");
+                }
                 else
                 {
                     chatTxtCount++;
                     if (isRed)
                     {
                         chatTxtCount++;
-                        chatText.text += "<b><color=#a52a2aff>" + chat[i] + "</color></b>";
+                        chatText.text += "<b><color=#E74C3C>" + chat[i] + "</color></b>";
                         isRed = false;
+                        yield return chatText.text;
+                    }
+                    else if (isGreen)
+                    {
+                        chatTxtCount++;
+                        chatText.text += "<b><color=#1ABC9C>" + chat[i] + "</color></b>";
+                        isGreen = false;
                         yield return chatText.text;
                     }
                     else
@@ -346,9 +428,9 @@ namespace GM
 
                 i++;
             }
-            if (!isChatFinish)
-                buttonAnim.SetTrigger("BUTTON");
         }
+
+
 
         /**
          * @brief : 말하고 있는지 아닌지 체크
@@ -369,12 +451,14 @@ namespace GM
                     chatScript.Clear();
                     chatCanvas.SetActive(false);
                     basicCanvas.SetActive(true);
+                    CustomBT.SetActive(true);
                 }
             }
-            else if (isChatFinish)
+            else //if (isChatFinish)
             {
                 Debug.Log("FINIS");
                 // 아니라면 다음 대사로 넘어감
+                chatTxtCount = 0;
                 chatTemp = "";
                 chatText.text = "";
                 sayingSpeed = 0.05f;
@@ -388,6 +472,7 @@ namespace GM
                     chatScript.Clear();
                     chatCanvas.SetActive(false);
                     basicCanvas.SetActive(true);
+                    CustomBT.SetActive(true);
                 }
             }
         }
@@ -412,8 +497,9 @@ namespace GM
         {
             isChatFinish = true;
             buttonAnim.SetTrigger("DONE");
-            
+
             basicCanvas.SetActive(true);
+            CustomBT.SetActive(true);
         }
 
         public void showMission(int type)
@@ -427,8 +513,11 @@ namespace GM
                 chatTxtCount = 0;
                 isChatFinish = false;
 
-                chatScript.Add("0/0/주변에 좀비들이 많아 식량을 구하기가 너무 힘드네..@옆 마을로 가는김에 좀비 #1#0#0마리만 없애줄수 있겠나?/");
-                chatScript.Add("0/0/고맙네/");
+                chatScript.Add("0/0/이봐, 자네/");
+                chatScript.Add("0/0/자네 혹시 베르타 주변에서 출몰한다는 #카#코 #데#빌 이라고 아는가?/");
+                chatScript.Add("0/0/그 놈 때문에 골머리가 썩는다는데.../");
+                chatScript.Add("0/0/#카#코 #데#빌 을 #처#치 한다면 베르타에 있는 내 친구 %김%동%원 이@%1%0%0%0%0%볼%트 를 줄 걸세$/"); 
+
                 chatting(chatScript[nowScriptPart]);
             }
             else
@@ -436,6 +525,7 @@ namespace GM
                 Debug.Log("IS ALREADY HAVE");
                 chatCanvas.SetActive(false);
                 basicCanvas.SetActive(true);
+                CustomBT.SetActive(true);
             }
         }
 
