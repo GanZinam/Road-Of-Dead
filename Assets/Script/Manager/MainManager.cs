@@ -60,7 +60,7 @@ namespace GM
             if (!GM.GameManager.getInstance().FIRST_START)
             {
                 // 데이터 (추후 삭제)
-                PlayerPrefs.SetInt("NowMyPos", 1);
+                PlayerPrefs.SetInt("NowMyPos", 0);
 
                 PlayerPrefs.SetInt("Map_0", 1);
                 PlayerPrefs.SetInt("Map_1", 1);
@@ -79,7 +79,6 @@ namespace GM
                 PlayerPrefs.SetInt("Item_4", 0);
                 PlayerPrefs.SetInt("Item_5", 0);
                 PlayerPrefs.SetInt("Item_6", 0);
-                GM.GameManager.getInstance().whereMe = 1;
 
                 for (int j = 0; j < 4; j++)
                 {
@@ -142,8 +141,9 @@ namespace GM
             Basic_Canvas.SetActive(true);
             for(int i = 0; i<3;i++)
             {
-                if(GM.GameManager.getInstance().whereMe.Equals(i))
+                if (PlayerPrefs.GetInt("NowMyPos").Equals(i))
                 {
+                    Debug.Log(PlayerPrefs.GetInt("NowMyPos"));
                     Map_Canvas[i].SetActive(true);
                 }
                 else

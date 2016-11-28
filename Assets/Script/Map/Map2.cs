@@ -149,8 +149,8 @@ public class Map2 : MonoBehaviour {
             //@웨이브 2 (보스)
             else if (GM.GameManager.getInstance().wave_start && GM.GameManager.getInstance().start_time - GM.GameManager.getInstance().Now_time_w >= Make_speed_w && GM.GameManager.getInstance().waveNum.Equals(2))
             {
-
-                GM.GameManager.getInstance().wave_start = false;    
+                GM.GameManager.getInstance().wave_start = false;  
+  
             }
         }
     }

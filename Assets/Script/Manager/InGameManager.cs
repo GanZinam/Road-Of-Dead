@@ -150,7 +150,7 @@ namespace GM
         public void init()
         {
             GameManager.getInstance().init();
-            GameObject obj = NGUITools.AddChild(null, map[PlayerInfo.loadNum]) as GameObject;                     // 맵 불러오기
+            GameObject obj = NGUITools.AddChild(null, map[PlayerPrefs.GetInt("NowMyPos")]) as GameObject;                     // 맵 불러오기
 
             
             //@ 차 불러오기
@@ -338,9 +338,12 @@ namespace GM
 
                     }
                 }
+                // 게임 성공 (종료)
                 else if (progressBar.value >= 1)
                 {
-                    gameEnd(true);  // 게임 성공 (종료)
+                    Debug.Log(PlayerInfo.loadNum);
+                    PlayerPrefs.SetInt("NowMyPos", PlayerInfo.loadNum);
+                    gameEnd(true);  
                 }
 
                 // 게임 실패 (종료)

@@ -40,10 +40,8 @@ namespace GM
         public float Now_time;              // 마지막 체크 시간
         [HideInInspector]
         public float Now_time_w;            // 마지막 체크 시간 (웨이브)
-        [HideInInspector]
-        public int whereMe = 1;             // 현재 내 위치
 
-        public bool FIRST_START = false;            // 게임 처음인지 아닌지
+        public bool FIRST_START = false;    // 게임 처음인지 아닌지
 
         //@ 게임 UI
         public UISlider hpBar;              // hp 스크롤 바

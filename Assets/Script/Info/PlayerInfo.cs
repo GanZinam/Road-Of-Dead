@@ -9,7 +9,7 @@ public static class PlayerInfo
     public static int dmg = 1;
     public static byte carType = 0;
 
-    public static int map = 1;
+    public static int map = 0;
 
     public static ITEM item0 = new ITEM(0, 0);
     public static ITEM item1 = new ITEM(0, 0);
