@@ -34,7 +34,7 @@ public class BossAnimation : MonoBehaviour
 
     void Start()
     {
-        hp = 1000000;
+        hp = 6000000;
 
         item_check = false;
 
@@ -43,7 +43,7 @@ public class BossAnimation : MonoBehaviour
 
         transform.localPosition = new Vector3(-820, -100);
 
-        weaponObj.transform.localPosition = new Vector3(-130, 83);
+        weaponObj.transform.localPosition = new Vector3(-550, 115);
         weaponObj.SetActive(false);
 
         if (Random.Range(0, 2).Equals(0))
@@ -197,7 +197,7 @@ public class BossAnimation : MonoBehaviour
 
     IEnumerator attackPattern(int idx)
     {
-        yield return new WaitForSeconds(15);
+        yield return new WaitForSeconds(10);
 
         if (idx.Equals(4))
             idx = 0;
@@ -207,7 +207,10 @@ public class BossAnimation : MonoBehaviour
             // 일반 좀비 4명 소환
             for (int i = 0; i < 4; i++)
             {
+                GM.GameManager.getInstance().monsterSpawnPos.x = Random.Range(-650, -700);      //-760 ~ -650
+                GM.GameManager.getInstance().monsterSpawnPos.y = Random.Range(28, -310);
                 GM.GameManager.getInstance().Monster_1_creat();
+
             }
         }
         else if (idx.Equals(1))
@@ -216,6 +219,8 @@ public class BossAnimation : MonoBehaviour
 
             for (int i = 0; i < 3; i++)
             {
+                GM.GameManager.getInstance().monsterSpawnPos.x = Random.Range(-650, -700);      //-760 ~ -650
+                GM.GameManager.getInstance().monsterSpawnPos.y = Random.Range(28, -310);
                 GM.GameManager.getInstance().Monster_3_creat();
             }
         }
@@ -224,6 +229,8 @@ public class BossAnimation : MonoBehaviour
             // 공격 좀비 3마리 소환
             for (int i = 0; i < 3; i++)
             {
+                GM.GameManager.getInstance().monsterSpawnPos.x = Random.Range(-650, -700);      //-760 ~ -650
+                GM.GameManager.getInstance().monsterSpawnPos.y = Random.Range(28, -310);
                 GM.GameManager.getInstance().Monster_2_creat();
             }
         }
@@ -233,6 +240,8 @@ public class BossAnimation : MonoBehaviour
 
             for (int i = 0; i < 2; i++)
             {
+                GM.GameManager.getInstance().monsterSpawnPos.x = Random.Range(-650, -700);      //-760 ~ -650
+                GM.GameManager.getInstance().monsterSpawnPos.y = Random.Range(28, -310);
                 GM.GameManager.getInstance().Monster_4_creat();
             }
         }
@@ -299,8 +308,10 @@ public class BossAnimation : MonoBehaviour
      */
     public void boom_item_die()
     {
+        Debug.Log(item_check);
         if (item_check)
         {
+            Debug.Log("White");
             hp -= 150;
             gameObject.GetComponent<UI2DSprite>().color = Color.white;
 
@@ -312,6 +323,13 @@ public class BossAnimation : MonoBehaviour
     {
         if (hp <= 0)
         {
+            if (PlayerPrefs.GetInt("Q_0_IS").Equals(1))
+            {
+                int k = PlayerPrefs.GetInt("Q_0_MONSTER_KILL");
+                k++;
+                PlayerPrefs.SetInt("Q_0_MONSTER_KILL", k);
+            }
+            
             bossCollider[0].enabled = false;
             bossCollider[1].enabled = false;
 

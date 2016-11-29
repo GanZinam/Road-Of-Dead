@@ -154,6 +154,7 @@
      <Compile Include="Assets\NGUI\Scripts\UI\UIViewport.cs" />
      <Compile Include="Assets\Script\Info\ItemInfo.cs" />
      <Compile Include="Assets\Script\Info\PlayerInfo.cs" />
+     <Compile Include="Assets\Script\Manager\AudioManager.cs" />
      <Compile Include="Assets\Script\Manager\GameManager.cs" />
      <Compile Include="Assets\Script\Manager\InGameManager.cs" />
      <Compile Include="Assets\Script\Manager\IntroManager.cs" />

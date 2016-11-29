@@ -10,12 +10,13 @@ namespace GM
         public GameObject pop;              // info 팝업
 
         public Image[] images;              // 좀비들 이미지
-        public Text mapTxt;                 // 맵 이름
+        //public Text mapTxt;                 // 맵 이름
         public Text questTxt;               // 퀘스트 내용
-        public Text chatTxt;                // 채팅 내용
+        //public Text chatTxt;                // 채팅 내용
         public GameObject CustomBT;        // 커스텀 버튼
 
         public Sprite[] zombieTypes;        // 좀비 타입들
+        public GameObject[] Map_Select;     // 맵 선택창
 
         public GameObject[] Map_Canvas;     // Map_Canvas 3개  0. LastTown  1. Volt 
         public GameObject Basic_Canvas;     // BasicCanvas
@@ -26,7 +27,7 @@ namespace GM
         public Sprite[] Car_onj;            // 0. normal 1. normal(yellow)
         public Sprite[] Tire_onj;           // 0. normal 1. Big
 
-        public GameObject[] Car_Custom;     
+        public GameObject[] Car_Custom;
         public GameObject[] Car_Netro;
         public GameObject[] Car_Spray;
         public GameObject[] Car_Tire;
@@ -48,7 +49,7 @@ namespace GM
 
         public Animator buttonAnim;
         int chatTxtCount = 0;
-        
+
         [SerializeField]
         Text[] myQuestTxt;
         [SerializeField]
@@ -60,17 +61,36 @@ namespace GM
         [SerializeField]
         Transform[] mapPos;
 
+        AudioManager _audio;
 
+        [SerializeField]
+        Animator successQuest;
 
-
+        [SerializeField]
+        Text moneyTxt;
 
         void Start()
         {
+            if (PlayerPrefs.GetInt("Q_0_IS").Equals(1) && PlayerPrefs.GetInt("Q_0_MONSTER_KILL").Equals(1))
+            {
+                successQuest.SetTrigger("Success");
+                PlayerPrefs.SetInt("Q_0_IS", 0);
+                PlayerPrefs.SetInt("Q_0_MONSTER_KILL", 0);
+                int money = PlayerPrefs.GetInt("Money");
+                money += 10000;
+                PlayerPrefs.SetInt("Money", money); 
+                myQuestTxt[0].text = "보유중인 퀘스트가 없습니다.";
+            }
+
+            moneyTxt.text = PlayerPrefs.GetInt("Money") + "";
+
             nowPos.transform.localPosition = mapPos[PlayerPrefs.GetInt("NowMyPos")].localPosition;
 
+            _audio = GameObject.Find("_Audio").GetComponent<AudioManager>();
+            _audio.checkMapBG();
 
             checkMap();
-            
+
             checkQuest();
 
             checkCar();
@@ -81,7 +101,7 @@ namespace GM
         {
             for (int i = 0; i < 5; i++)
             {
-                if(PlayerPrefs.GetInt(string.Format("Map_{0}", i )).Equals(1))
+                if (PlayerPrefs.GetInt(string.Format("Map_{0}", i)).Equals(1))
                 {
                     Map_Close_BT[i].SetActive(false);
                     Map_BT[i].SetActive(true);
@@ -91,7 +111,7 @@ namespace GM
                     Map_Close_BT[i].SetActive(true);
                     Map_BT[i].SetActive(false);
                 }
-                
+
             }
         }
 
@@ -103,13 +123,13 @@ namespace GM
 
             int qNum = 0;
 
-            for (int i =0; i< PlayerInfo.quest.Length; i++)
+            for (int i = 0; i < PlayerInfo.quest.Length; i++)
             {
                 if (!PlayerInfo.quest[i].Equals(0))
                 {
                     if (PlayerInfo.quest[i].Equals(1))
                     {
-                        myQuestTxt[qNum].text = "좀비 처치  ( " + PlayerPrefs.GetInt("Q_0_MOSNTER_KILL") + " / 100 )"; 
+                        myQuestTxt[qNum].text = "카코데빌 처치  ( " + PlayerPrefs.GetInt("Q_0_MONSTER_KILL") + " / 1 )";
                     }
                 }
             }
@@ -119,7 +139,7 @@ namespace GM
         {
             Debug.Log(PlayerPrefs.GetInt("NowMyPos"));
             Basic_Canvas.SetActive(true);
-            for(int i = 0; i<3;i++)
+            for (int i = 0; i < 3; i++)
             {
                 if (PlayerPrefs.GetInt("NowMyPos").Equals(i))
                 {
@@ -150,7 +170,7 @@ namespace GM
                         Car_Netro[0].SetActive(true);
                         Car_Netro[1].SetActive(true);
                     }
-                    else 
+                    else
                     {
                         Car_Netro[0].SetActive(false);
                         Car_Netro[1].SetActive(false);
@@ -175,12 +195,12 @@ namespace GM
                 }
                 if (PlayerPrefs.GetInt(string.Format("Tire_{0}", i)).Equals(1))
                 {
-                    if(i.Equals(1))
+                    if (i.Equals(1))
                     {
                         Car_Tire[1].SetActive(true);
                         Car_Tire[3].SetActive(true);
                     }
-                    else if(i.Equals(0))
+                    else if (i.Equals(0))
                     {
                         Car_Tire[0].SetActive(true);
                         Car_Tire[2].SetActive(true);
@@ -188,12 +208,12 @@ namespace GM
                 }
             }
         }
-        
+
         public void CustomCheck()
         {
             for (int i = 0; i < 4; i++)
             {
-                if(PlayerPrefs.GetInt(string.Format("Nitro_{0}", i)).Equals(1))
+                if (PlayerPrefs.GetInt(string.Format("Nitro_{0}", i)).Equals(1))
                 {
                     Car_Obj[0].sprite = Netro_onj[i];
                 }
@@ -221,18 +241,23 @@ namespace GM
             if (i != PlayerPrefs.GetInt("NowMyPos"))
             {
                 PlayerInfo.loadNum = i;
-                Debug.Log("next_map_num : " + PlayerInfo.loadNum);
-                mapTxt.text = "";
+                if (i.Equals(1))
+                {
+                    Map_Select[0].SetActive(true);
+                }
+                else if (i.Equals(2))
+                {
+                    Map_Select[1].SetActive(true);
+                }
                 if (PlayerInfo.quest.Equals(1))
                 {
-                    questTxt.text = "좀비 100마리 처치!";
+                    questTxt.text = "카코데빌 1마리 처치";
                 }
-                chatTxt.text = "";
 
-                images[0].sprite = zombieTypes[0];
-                images[1].sprite = zombieTypes[1];
-                images[2].sprite = zombieTypes[2];
-                images[3].sprite = zombieTypes[3];
+                //images[0].sprite = zombieTypes[0];
+                //images[1].sprite = zombieTypes[1];
+                //images[2].sprite = zombieTypes[2];
+                //images[3].sprite = zombieTypes[3];
 
                 pop.SetActive(true);
             }
@@ -259,6 +284,7 @@ namespace GM
          */
         public void gameStartBT()
         {
+            _audio.startInGame();
             PlayerInfo.hp = 1000;
 
             Application.LoadLevel("InGameScene");
@@ -313,7 +339,28 @@ namespace GM
             Car_Obj[3].sprite = Tire_onj[i];
         }
 
-
+        #region _AUDIO_
+        public void clickBT()
+        {
+            _audio.clickBT();
+        }
+        public void selectMap()
+        {
+            _audio.selectMap();
+        }
+        public void returnMap()
+        {
+            _audio.returnMap();
+        }
+        public void soundOn(bool b)
+        {
+            _audio.soundOn(b);
+        }
+        public void effectOn(bool b)
+        {
+            _audio.effectOn(b);
+        }
+        #endregion
 
         #region _CHAT_
 
@@ -371,7 +418,7 @@ namespace GM
             }
         }
 
-        bool isRed = false; 
+        bool isRed = false;
         bool isGreen = false;
         bool isChatFinish = false;
 
@@ -462,7 +509,7 @@ namespace GM
                 chatTemp = "";
                 chatText.text = "";
                 sayingSpeed = 0.05f;
-                
+
                 if (nowScriptPart < chatScript.Count - 1)
                 {
                     chatting(chatScript[++nowScriptPart]);
@@ -516,7 +563,7 @@ namespace GM
                 chatScript.Add("0/0/이봐, 자네/");
                 chatScript.Add("0/0/자네 혹시 베르타 주변에서 출몰한다는 #카#코 #데#빌 이라고 아는가?/");
                 chatScript.Add("0/0/그 놈 때문에 골머리가 썩는다는데.../");
-                chatScript.Add("0/0/#카#코 #데#빌 을 #처#치 한다면 베르타에 있는 내 친구 %김%동%원 이@%1%0%0%0%0%볼%트 를 줄 걸세$/"); 
+                chatScript.Add("0/0/#카#코 #데#빌 을 #처#치 한다면 베르타에 있는 내 친구 %김%동%원 이@%1%0%0%0%0%볼%트 를 줄 걸세$/");
 
                 chatting(chatScript[nowScriptPart]);
             }

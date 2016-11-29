@@ -9,6 +9,8 @@ namespace GM
         Animator readyPop;
         [SerializeField]
         Animator startPop;
+        [SerializeField]
+        AudioSource _carAudio;
 
         /**
          * @brief : 게임 시작 버튼
@@ -18,7 +20,7 @@ namespace GM
             readyPop.SetBool("Quit", true);
             startPop.SetBool("Start", true);
             StartCoroutine(waitingStart());
-            
+            _carAudio.Play();
         }
 
         /**

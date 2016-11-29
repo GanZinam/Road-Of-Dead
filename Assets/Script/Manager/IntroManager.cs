@@ -2,6 +2,8 @@
 using System.Collections;
 
 public class IntroManager : MonoBehaviour {
+    
+    public Animator sceneAnim;
 
 	// Use this for initialization
 	void Start () 
@@ -9,7 +11,7 @@ public class IntroManager : MonoBehaviour {
         if (!GM.GameManager.getInstance().FIRST_START)
         {
             // 데이터 (추후 삭제)
-            PlayerPrefs.SetInt("NowMyPos", 1);
+            PlayerPrefs.SetInt("NowMyPos", 0);
 
             PlayerPrefs.SetInt("Map_0", 1);
             PlayerPrefs.SetInt("Map_1", 1);
@@ -49,11 +51,36 @@ public class IntroManager : MonoBehaviour {
             GM.GameManager.getInstance().FIRST_START = true;
             // ===========================================================
         }
+        StartCoroutine(showBT());
+        StartCoroutine(soundLion());
 	}
-	
+
+    IEnumerator soundLion()
+    {
+        yield return new WaitForSeconds(1);
+        GameObject.Find("_Audio").GetComponent<GM.AudioManager>().introEffect();
+        GameObject.Find("_Audio").GetComponent<GM.AudioManager>().introSound();
+    }
+
+    [SerializeField]
+    GameObject button;
+    IEnumerator showBT()
+    {
+        yield return new WaitForSeconds(5f);
+        button.SetActive(true);
+    }
 
     public void Next_Scene()
     {
+        sceneAnim.SetTrigger("Change");
+        GameObject.Find("_Audio").GetComponent<GM.AudioManager>().StartCoroutine("decreaseServeVolume");
+        StartCoroutine(changeScene());
+    }
+
+    IEnumerator changeScene()
+    {
+        yield return new WaitForSeconds(1);
+        DontDestroyOnLoad(GameObject.Find("_Audio"));
         Application.LoadLevel("MainScene");
     }
 }

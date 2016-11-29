@@ -12,8 +12,8 @@ public class Map2 : MonoBehaviour {
         Make_speed = 0.8f;
         Make_speed_w = 0.5f;
         Wave_num = 0;
-        GM.GameManager.getInstance().wave1_time = 0.3f;
-        GM.GameManager.getInstance().wave2_time = 0.6f;
+        GM.GameManager.getInstance().wave1_time = 0.24f;
+        GM.GameManager.getInstance().wave2_time = 0.48f;
     }
 
     void Update()
@@ -21,8 +21,8 @@ public class Map2 : MonoBehaviour {
         if (!GM.GameManager.getInstance().pause && !GM.GameManager.getInstance().isGameEnd)
         {
             GM.GameManager.getInstance().start_time += Time.deltaTime;
-            //@30초 이전에 나오는 몬스터
-            if (GM.GameManager.getInstance().start_time <= 30f && GM.GameManager.getInstance().start_time - GM.GameManager.getInstance().Now_time >= Make_speed)
+            //@15초 이전에 나오는 몬스터
+            if (GM.GameManager.getInstance().start_time <= 15f && GM.GameManager.getInstance().start_time - GM.GameManager.getInstance().Now_time >= Make_speed)
             {
                 GM.GameManager.getInstance().Now_time = GM.GameManager.getInstance().start_time;
 
@@ -61,8 +61,8 @@ public class Map2 : MonoBehaviour {
                     GM.GameManager.getInstance().Monster_3_creat();
                 }
             }
-            //@60초 이전에 나오는 몬스터
-            else if (GM.GameManager.getInstance().start_time <= 60f && GM.GameManager.getInstance().start_time - GM.GameManager.getInstance().Now_time >= Make_speed)
+            //@30초 이전에 나오는 몬스터
+            else if (GM.GameManager.getInstance().start_time <= 30 && GM.GameManager.getInstance().start_time - GM.GameManager.getInstance().Now_time >= Make_speed)
             {
                 GM.GameManager.getInstance().Now_time = GM.GameManager.getInstance().start_time;
 
@@ -71,7 +71,6 @@ public class Map2 : MonoBehaviour {
                 int M1_num = 0;
                 int M2_num = 0;
                 int M3_num = 0;
-                int M4_num = 0;
 
                 if (rand >= 90)
                     Monster_num = 4;

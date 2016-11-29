@@ -231,10 +231,7 @@ namespace GM
                 Reload = false;
             }
 
-            if (boss != null)
-            {
-                boss.SendMessage("boom_item_die");
-            }
+            
         }
 
         /**
@@ -282,6 +279,10 @@ namespace GM
                     monC = v_monster4.Count;
                     i--;
                 }
+            }
+            if (boss != null)
+            {
+                boss.SendMessage("boom_item_die");
             }
         }
 

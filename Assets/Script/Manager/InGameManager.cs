@@ -118,8 +118,23 @@ namespace GM
         [SerializeField]
         GameObject uiGameRoot;
 
+        [SerializeField]
+        UI2DSprite[] myPlace;
+
+        [SerializeField]
+        Sprite[] places;
+
+        AudioManager _audio;
+
         void Start()
         {
+            myPlace[0].sprite2D = places[PlayerPrefs.GetInt("NowMyPos")];
+            myPlace[1].sprite2D = places[PlayerPrefs.GetInt("NowMyPos")];
+
+
+            _audio = GameObject.Find("_Audio").GetComponent<AudioManager>();
+
+
             GameManager.getInstance().pause = true;
 
             if (PlayerPrefs.GetInt("NowMyPos").Equals(0))
@@ -158,10 +173,20 @@ namespace GM
                         {
                             if (PlayerPrefs.GetInt(string.Format("Tire_{0}", j)).Equals(1))
                             {
-                                Car1_Tire_[0].SetActive(true);
-                                Car1_Tire_[1].SetActive(true);
-                                Car1_Tire_[2].SetActive(false);
-                                Car1_Tire_[3].SetActive(false);
+                                if (j.Equals(0))
+                                {
+                                    Car1_Tire_[0].SetActive(true);
+                                    Car1_Tire_[1].SetActive(true);
+                                    Car1_Tire_[2].SetActive(false);
+                                    Car1_Tire_[3].SetActive(false);
+                                }
+                                else if (j.Equals(1))
+                                {
+                                    Car1_Tire_[0].SetActive(false);
+                                    Car1_Tire_[1].SetActive(false);
+                                    Car1_Tire_[2].SetActive(true);
+                                    Car1_Tire_[3].SetActive(true);
+                                }
                             }
                             if (PlayerPrefs.GetInt(string.Format("Nitro_{0}", j)).Equals(1))
                             {
@@ -187,10 +212,20 @@ namespace GM
                         {
                             if (PlayerPrefs.GetInt(string.Format("Tire_{0}", j)).Equals(1))
                             {
-                                Car2_Tire_[0].SetActive(true);
-                                Car2_Tire_[1].SetActive(true);
-                                Car2_Tire_[2].SetActive(false);
-                                Car2_Tire_[3].SetActive(false);
+                                if (j.Equals(0))
+                                {
+                                    Car2_Tire_[0].SetActive(true);
+                                    Car2_Tire_[1].SetActive(true);
+                                    Car2_Tire_[2].SetActive(false);
+                                    Car2_Tire_[3].SetActive(false);
+                                }
+                                else if(j.Equals(1))
+                                {
+                                    Car2_Tire_[0].SetActive(false);
+                                    Car2_Tire_[1].SetActive(false);
+                                    Car2_Tire_[2].SetActive(true);
+                                    Car2_Tire_[3].SetActive(true);
+                                }
                             }
                             if (PlayerPrefs.GetInt(string.Format("Nitro_{0}", j)).Equals(1))
                             {
@@ -256,7 +291,6 @@ namespace GM
                             mousePositem.SetActive(true);
                             BoomPositem.SetActive(true);
                             mousePositem.transform.localPosition = touchPos - new Vector2(640, 360);
-
                         }
                         else if (item_finish.Equals(false))
                         {
@@ -288,6 +322,8 @@ namespace GM
                     mousePosObj.SetActive(false);
                     if (item_finish)
                     {
+                        _audio.bombEffect();
+
                         GameManager.getInstance().cheak_Monster();
                         item_finish = false;
                         item_use_dark.SetActive(false);
@@ -311,7 +347,7 @@ namespace GM
 
                 //@ 게임 진행 프로그래스바
                 if (!GameManager.getInstance().isGameEnd)
-                    progressBar.value += Time.deltaTime * 0.01f;
+                    progressBar.value += Time.deltaTime * 0.016f;
 
                 if (progressBar.value >= (GM.GameManager.getInstance().wave1_time) && GameManager.getInstance().waveNum.Equals(0))
                 {
@@ -414,6 +450,7 @@ namespace GM
                 ppong_startTime += Time.smoothDeltaTime;
                 if (ppong_startTime >= 10.0f)
                 {
+                    ppong_startTime = 0f;
                     Bullet_DelayTime = 0.05f;
                     GM.GameManager.getInstance().Bullet_Damege = 20;
                     item_exit(6);
@@ -439,6 +476,7 @@ namespace GM
         {
             if (GameManager.getInstance().countBullet >= 0 && !TimeStart && !GameManager.getInstance().plzShaking)
             {
+                shotEffect();
                 shootAnim.SetTrigger("Shoot");
                 bulletsNumTxt.text = GameManager.getInstance().countBullet + "";
 
@@ -821,6 +859,7 @@ namespace GM
         {
             if (!GameManager.getInstance().pause)
             {
+                Debug.Log("AnaPPong");
                 item_intro(6);
                 AnaPPongBG.SetActive(true);
                 AnaHead.SetActive(true);
@@ -829,6 +868,9 @@ namespace GM
                 GameManager.getInstance().item_slot[item_select].GetComponent<UI2DSprite>().color = Color.red;
 
                 GameManager.getInstance().inputItemSlotTxt(item_select, GameManager.getInstance().myItem[item_select].type);
+
+
+                _audio.strongEffect();
             }
         }
 
@@ -845,6 +887,31 @@ namespace GM
             Time.timeScale = 0;
             GameManager.getInstance().pause = true;
         }
+
+
+
+        #region _AUDIO_
+        public void clickBT()
+        {
+            _audio.clickBT();
+        }
+        public void soundOn(bool b)
+        {
+            _audio.soundOn(b);
+        }
+        public void effectOn(bool b)
+        {
+            _audio.effectOn(b);
+        }
+        public void shotEffect()
+        {
+            _audio.shotEffect();
+        }
+        public void reloadEffect()
+        {
+            _audio.reloadEffect();
+        }
+        #endregion
 
     }
 }
