@@ -1,5 +1,14 @@
-#Team Project
-##GanZiNam's 4th project
+
+# TEAM - [GANZINAM](https://github.com/GanZinam)
+#### 팀 - 간지남
+#### 한국게임과학고등학교 (3학년)
+##### 팀원 : 강예찬 , 강석찬 , 김태양 , 김동원 , 배명한 , 고대호
+
+## Road-Of-Dead
+### 수상이력
+```
+ 1. 한국게임과학고등학교 학교장배 게임제작 상
+```
 
 ### Version
 ```
